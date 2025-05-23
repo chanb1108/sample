@@ -1,0 +1,119 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<xFreeUploader>
+	
+	<!-- 기존 v1에서 사용중이었던 내용 -->
+	<xMsg_dropArea>Please drag or double click the file to upload here.</xMsg_dropArea>
+	<xMsg_readyUpload>Ready to upload.</xMsg_readyUpload>
+	<xMsg_iframe>Iframes are not supported in this browser.</xMsg_iframe>
+	<xMsg_fileAdd>Add files</xMsg_fileAdd>
+	<xMsg_fileDelete>Remove item</xMsg_fileDelete>
+	<xMsg_fileAllDelete>Remove Entire Entries</xMsg_fileAllDelete>
+	<xMsg_fileSubmit>File transfer</xMsg_fileSubmit>
+	<xMsg_max>Maximum</xMsg_max>
+	<xMsg_count>EA</xMsg_count>
+	<xMsg_limit>Limit</xMsg_limit>
+	<xMsg_submitTimeRemain>Transfer rate (Remaining time)</xMsg_submitTimeRemain>	
+	<xMsg_added>Added</xMsg_added>
+	<xMsg_viewed>Viewed</xMsg_viewed>
+	<xMsg_fileName>File name</xMsg_fileName>	
+	<xMsg_uploadState>Upload Status(%)</xMsg_uploadState>	
+	<xMsg_uploadSize>File size</xMsg_uploadSize>	
+	<xMsg_fileAddError>Error adding file attachment!</xMsg_fileAddError>	
+	<xMsg_fileDelError>Error deleting attachments!</xMsg_fileDelError>	
+	<xMsg_fileDataError>File attachment data error!</xMsg_fileDataError>	
+	<xMsg_attachNoAdd>No attachments have been added. Please select attachments.</xMsg_attachNoAdd>	
+	<xMsg_directoryError>The path was not entered correctly.</xMsg_directoryError>	
+	<xMsg_overlapFile>The file added to the file attachment list.</xMsg_overlapFile>	
+	<xMsg_maxCountLimit>The maximum number of file attachments has been exceeded : </xMsg_maxCountLimit>	
+	<xMsg_maxSizeLimit>File attachment exceeds maximum size.|File name : </xMsg_maxSizeLimit>	
+	<xMsg_notExt>file is an extension that cannot be attached.</xMsg_notExt>	
+	<xMsg_serverError>There was a problem communicating with the server.</xMsg_serverError>	
+	<xMsg_allDelete>Are you sure you want to remove all entries?</xMsg_allDelete>
+	<xMsg_uploadComplete>Your upload is complete.</xMsg_uploadComplete>
+	<xMsg_stateMsgAddFile>Item added.</xMsg_stateMsgAddFile>
+	<xMsg_stateMsgSelectedFileDelete>The selected item has been removed.</xMsg_stateMsgSelectedFileDelete>
+	<xMsg_stateMsgSelectedFilesDelete>Selected items have been removed.</xMsg_stateMsgSelectedFilesDelete>
+	<xMsg_stateMsgAllFilesDelete>All items have been removed.</xMsg_stateMsgAllFilesDelete>
+	<xMsg_saveDate>Date saved</xMsg_saveDate>
+	<xMsg_savePath>Storage path</xMsg_savePath>
+	<xMsg_fileType>File type</xMsg_fileType>
+	<xMsg_fileSearch>View files</xMsg_fileSearch>
+	<xMsg_selectedDownload>Select download</xMsg_selectedDownload>
+	<xMsg_AllDownload>Full download</xMsg_AllDownload>
+	<xMsg_AllClear>Initialize list</xMsg_AllClear>
+	<xMsg_Open>Open</xMsg_Open>
+	<xMsg_NotFoundAttachFileList>Attachment list does not exist.</xMsg_NotFoundAttachFileList>
+	<xMsg_NotSelectedDownloadFile>Please select the item to download.</xMsg_NotSelectedDownloadFile>
+	<xMsg_stateMsgSearchFile> items were viewed.</xMsg_stateMsgSearchFile>
+	<xMsg_stateMsgSelectedFiles> items selected.</xMsg_stateMsgSelectedFiles>
+	<xMsg_allDownload>Would you like to download all entries?</xMsg_allDownload>
+	<xMsg_NotSelectedDeleteFile>Please select an item to delete.</xMsg_NotSelectedDeleteFile>
+	<xMsg_XssFileAlert>XSS attack suspicious file.</xMsg_XssFileAlert>
+	<xMsg_selectedFileCheck>Check file selection</xMsg_selectedFileCheck>
+	<xMsg_addFileAllCheck>Select all additional files</xMsg_addFileAllCheck>
+	
+	<!-- v2에서 새로 추가된 내용 -->
+	<xMsg_isValidIECheck>Works only with Internet Explorer 10 or higher.</xMsg_isValidIECheck>
+	<xMsg_fileAdd>Add file</xMsg_fileAdd>
+	<xMsg_fileDelete2>Remove selection</xMsg_fileDelete2>
+	<xMsg_versionInfo>Product information</xMsg_versionInfo>
+	<xMsg_uploadLimitedFileTitle>File size in use</xMsg_uploadLimitedFileTitle>
+	<xMsg_fileUsageCapacity>Usage</xMsg_fileUsageCapacity>
+	<xMsg_fileServingCapacity>Serving</xMsg_fileServingCapacity>
+	<xMsg_selectedDownload2>Download</xMsg_selectedDownload2>
+	<xMsg_readyDownload>Ready to download.</xMsg_readyDownload>	
+	<xMsg_attachNoAdd2>No attachments found.</xMsg_attachNoAdd2>
+	<xMsg_continueFileQuestion>The %d file has been partially transferred.|Do you want to continue transferring the file?</xMsg_continueFileQuestion>
+	<xMsg_fileTransferStop>Transmission aborted.</xMsg_fileTransferStop>
+	<xMsg_continueFileDownQuestion>The %d file can be downloaded continuously.|Do you want to continue downloading the file?</xMsg_continueFileDownQuestion>
+	<xMsg_makingDownloadFile>Creating download file inside.</xMsg_makingDownloadFile>
+	<xMsg_dontPageMove>If the page is moved during the operation, the file download cannot be performed normally.</xMsg_dontPageMove>
+	<xMsg_onlyoneMoveFile>Only one file can be moved.</xMsg_onlyoneMoveFile>
+	
+	<!-- v2 제품 정보 다이얼로그 -->
+	<xMsg_productInformation>Product information</xMsg_productInformation>
+	<xMsg_licenseInfo>This product is registered to the following users:</xMsg_licenseInfo>
+	<xMsg_companyName>Company name</xMsg_companyName>
+	<xMsg_licenseType>License Type</xMsg_licenseType>
+	<xMsg_devGuide>Developer Guide</xMsg_devGuide>
+	<xMsg_userGuide>User Guide</xMsg_userGuide>
+	
+	<!-- v2 파일전송창 다이얼로그 -->
+	<xMsg_transferFile>Transfer file</xMsg_transferFile>
+	<xMsg_transmissionCapacity>Transmission capacity</xMsg_transmissionCapacity>
+	<xMsg_baudRate>Baud rate</xMsg_baudRate>
+	<xMsg_timeRemaining>Time remaining</xMsg_timeRemaining>
+	<xMsg_detailData>Details</xMsg_detailData>
+	<xMsg_simplyData>Simply</xMsg_simplyData>
+	<xMsg_abort>Pause</xMsg_abort>
+	<xMsg_restart>Restart</xMsg_restart>
+	
+	<!-- v2 파일정보창 다이얼로그 -->
+	<xMsg_fileInformation>File information</xMsg_fileInformation>
+	<xMsg_fileName2>File name</xMsg_fileName2>
+	<xMsg_uploadSize2>File size</xMsg_uploadSize2>
+	<xMsg_fileFormat>File format</xMsg_fileFormat>
+	<xMsg_fileCreationDate>File creation date</xMsg_fileCreationDate>
+	<xMsg_filePath>File location</xMsg_filePath>
+	
+	<!-- v2 업로드 제한설정 정보 팝업 창 다이얼로그 -->
+	<xMsg_aboutUploadLimitSetting>About upload limit setting</xMsg_aboutUploadLimitSetting>
+	<xMsg_numberOfUploads>Number of uploads</xMsg_numberOfUploads>
+	<xMsg_uploadableCapacitySingle>Uploadable single file capacity</xMsg_uploadableCapacitySingle>
+	<xMsg_uploadableCapacity>Uploadable total file capacity</xMsg_uploadableCapacity>
+	<xMsg_count2>EA</xMsg_count2>
+	
+	<!-- v2 XFU의 마우스 우측 컨텍스트 메뉴 -->
+	<xMsg_selectedImgViewer>Preview the selected image</xMsg_selectedImgViewer>
+	
+	<!-- v2 이미지 미리보기 팝업 창 다이얼로그 -->
+	<xMsg_openImage>Open Original Image.</xMsg_openImage>
+	<xMsg_openImageSizeOver>Preview is not possible because the size of the local image is large.</xMsg_openImageSizeOver>
+	<xMsg_openImageSizeOverAlertMsg>The high-capacity image is replaced by Open Original Image.</xMsg_openImageSizeOverAlertMsg>
+	<xMsg_rotateLeft>Turn L</xMsg_rotateLeft>
+	<xMsg_rotateRight>Turn R</xMsg_rotateRight>
+	<xMsg_scaleX>Reverse L/R</xMsg_scaleX>
+	<xMsg_scaleY>Upside down</xMsg_scaleY>
+	
+</xFreeUploader>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.example.sample.service.impl.BoardMapper">
+
+	<resultMap id="board" type="egovframework.example.sample.service.BoardVO">
+		<result property="bbIdx" column="bb_idx"/>
+		<result property="bbTitle" column="bb_title"/>
+		<result property="orName" column="or_name"/>
+		<result property="bbRegDate" column="bb_reg_date"/>
+		<result property="bbHit" column="bb_hit"/>
+		<result property="bbOpen" column="bb_open"/>
+	</resultMap>
+	
+	<resultMap id="org" type="egovframework.example.sample.service.OrgVO">
+		<result property="orIdx" column="or_idx"/>
+		<result property="orId" column="or_id"/>
+		<result property="orName" column="or_name"/>
+		<result property="orLevel" column="or_level"/>
+		<result property="orContestStatus" column="or_contest_status"/>
+		<result property="orRndStatus" column="or_rnd_status"/>
+		<result property="orIpIntro" column="or_ip_intro"/>
+		<result property="orSeq" column="or_seq"/>
+		<result property="orGb" column="or_gb"/>
+		<result property="orSearchGroup" column="or_search_group"/>
+	</resultMap>
+
+	<select id="selectBoardList" parameterType="boardVO" resultMap="board">
+		SELECT b.bb_idx, b.bb_title, o.or_name, b.bb_reg_date, b.bb_hit, b.bb_open
+		FROM sianadb.market.bbs b
+		LEFT JOIN sianadb.market.org o
+			ON b.bb_or_idx = o.or_idx
+		WHERE o.or_name IS NOT NULL
+	</select>
+	
+	<select id="selectOrgList" parameterType="orgVO" resultMap="org">
+		SELECT O.OR_IDX, O.OR_ID, O.OR_NAME, O.OR_LEVEL, O.OR_CONTEST_STATUS, O.OR_RND_STATUS, O.OR_RND_STATUS, O.OR_IP_INTRO, O.OR_SEQ, O.OR_GB, O.OR_SEARCH_GROUP
+		FROM SIANADB.MARKET.ORG O
+		ORDER BY OR_SEQ
+	</select>
+	
+	<insert id="insertBoard" parameterType="boardVO" useGeneratedKeys="true" keyProperty="bbIdx">
+		INSERT INTO SIANADB.MARKET.BBS(
+			BB_BBSID,
+			BB_OR_IDX,
+			BB_TYPE,
+			BB_TITLE,
+			BB_CONTENT,
+			BB_SEQ,
+			BB_HIT,
+			BB_NOTICE,
+			BB_OPEN,
+			BB_CONFIRM,
+			BB_STATUS,
+			BB_OPEN_TYPE,
+			BB_CO_IDX,
+			BB_REG_DATE,
+			BB_REG_ID,
+			BB_REG_IP
+		) VALUES (
+			#{bbBbsid},
+			#{bbOrIdx},
+			#{bbType},
+			#{bbTitle},
+			#{bbContent},
+			#{bbSeq},
+			#{bbHit},
+			#{bbNotice},
+			#{bbOpen},
+			#{bbConfirm},
+			#{bbStatus},
+			#{bbOpenType},
+			#{bbCoIdx},
+			now(),
+			#{bbRegId},
+			#{bbRegIp}
+		)
+	</insert>
+
+</mapper>

@@ -1,0 +1,119 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<xFreeUploader>
+	
+	<!-- 기존 v1에서 사용중이었던 내용 -->
+	<xMsg_dropArea>이곳에 업로드할 파일을 마우스로 끌어넣어 주시거나 더블클릭 하세요.</xMsg_dropArea>
+	<xMsg_readyUpload>업로드할 준비가 되었습니다.</xMsg_readyUpload>
+	<xMsg_iframe>이 브라우저에서는 iframe이 지원되지 않습니다.</xMsg_iframe>
+	<xMsg_fileAdd>파일추가</xMsg_fileAdd>
+	<xMsg_fileDelete>항목제거</xMsg_fileDelete>
+	<xMsg_fileAllDelete>항목전체제거</xMsg_fileAllDelete>
+	<xMsg_fileSubmit>파일전송</xMsg_fileSubmit>
+	<xMsg_max>최대</xMsg_max>
+	<xMsg_count>개</xMsg_count>
+	<xMsg_limit>제한</xMsg_limit>
+	<xMsg_submitTimeRemain>전송속도(남은시간)</xMsg_submitTimeRemain>	
+	<xMsg_added>추가됨</xMsg_added>
+	<xMsg_viewed>조회됨</xMsg_viewed>
+	<xMsg_fileName>파일이름</xMsg_fileName>	
+	<xMsg_uploadState>업로드상태(%)</xMsg_uploadState>	
+	<xMsg_uploadSize>파일크기</xMsg_uploadSize>	
+	<xMsg_fileAddError>파일첨부 추가 오류 발생!</xMsg_fileAddError>	
+	<xMsg_fileDelError>파일첨부 삭제 오류 발생!</xMsg_fileDelError>	
+	<xMsg_fileDataError>파일첨부 데이터 오류 발생!</xMsg_fileDataError>	
+	<xMsg_attachNoAdd>첨부파일이 추가되지 않았습니다. 첨부파일을 선택하여 추가해주세요.</xMsg_attachNoAdd>	
+	<xMsg_directoryError>경로가 올바로 입력되지 않았습니다.</xMsg_directoryError>	
+	<xMsg_overlapFile>파일첨부 목록에 추가되어 있는 파일입니다.</xMsg_overlapFile>	
+	<xMsg_maxCountLimit>건까지 업로드 가능합니다.</xMsg_maxCountLimit>	
+	<xMsg_maxSizeLimit>파일첨부 최대 사이즈를 초과하였습니다.|파일명 : </xMsg_maxSizeLimit>	
+	<xMsg_notExt>파일은 첨부할 수 없는 확장자 입니다.</xMsg_notExt>	
+	<xMsg_serverError>서버와 통신 중 문제가 발생했습니다.</xMsg_serverError>	
+	<xMsg_allDelete>전체 항목을 제거하시겠습니까?</xMsg_allDelete>
+	<xMsg_uploadComplete>업로드가 완료되었습니다.</xMsg_uploadComplete>
+	<xMsg_stateMsgAddFile>개 항목이 추가되었습니다.</xMsg_stateMsgAddFile>
+	<xMsg_stateMsgSelectedFileDelete>선택한 항목이 제거되었습니다.</xMsg_stateMsgSelectedFileDelete>
+	<xMsg_stateMsgSelectedFilesDelete>개 항목이 제거되었습니다.</xMsg_stateMsgSelectedFilesDelete>
+	<xMsg_stateMsgAllFilesDelete>모든 항목들이 제거되었습니다.</xMsg_stateMsgAllFilesDelete>
+	<xMsg_saveDate>저장한 날짜</xMsg_saveDate>
+	<xMsg_savePath>저장경로</xMsg_savePath>
+	<xMsg_fileType>파일종류</xMsg_fileType>
+	<xMsg_fileSearch>파일조회</xMsg_fileSearch>
+	<xMsg_selectedDownload>선택다운로드</xMsg_selectedDownload>
+	<xMsg_AllDownload>전체다운로드</xMsg_AllDownload>
+	<xMsg_AllClear>목록초기화</xMsg_AllClear>
+	<xMsg_Open>열기</xMsg_Open>
+	<xMsg_NotFoundAttachFileList>첨부파일 목록이 존재하지 않습니다.</xMsg_NotFoundAttachFileList>
+	<xMsg_NotSelectedDownloadFile>다운로드 받을 항목을 선택해주시기 바랍니다.</xMsg_NotSelectedDownloadFile>
+	<xMsg_stateMsgSearchFile>건 항목이 조회되었습니다.</xMsg_stateMsgSearchFile>
+	<xMsg_stateMsgSelectedFiles>개 항목이 선택되었습니다.</xMsg_stateMsgSelectedFiles>
+	<xMsg_allDownload>전체 항목을 다운받으시겠습니까?</xMsg_allDownload>
+	<xMsg_NotSelectedDeleteFile>삭제할 항목을 선택해주시기 바랍니다.</xMsg_NotSelectedDeleteFile>
+	<xMsg_XssFileAlert>XSS공격 의심 파일입니다.</xMsg_XssFileAlert>
+	<xMsg_selectedFileCheck>파일선택체크</xMsg_selectedFileCheck>
+	<xMsg_addFileAllCheck>추가파일전체선택</xMsg_addFileAllCheck>
+	
+	<!-- v2에서 새로 추가된 내용 -->
+	<xMsg_isValidIECheck>Internet Explorer 10 버전 이상에서만 동작합니다.</xMsg_isValidIECheck>
+	<xMsg_fileAdd>파일추가</xMsg_fileAdd>
+	<xMsg_fileDelete2>선택제거</xMsg_fileDelete2>
+	<xMsg_versionInfo>제품 정보</xMsg_versionInfo>
+	<xMsg_uploadLimitedFileTitle>사용 중인 파일 용량</xMsg_uploadLimitedFileTitle>
+	<xMsg_fileUsageCapacity>사용량</xMsg_fileUsageCapacity>
+	<xMsg_fileServingCapacity>제공량</xMsg_fileServingCapacity>
+	<xMsg_selectedDownload2>다운로드</xMsg_selectedDownload2>
+	<xMsg_readyDownload>파일 다운로드 준비완료</xMsg_readyDownload>	
+	<xMsg_attachNoAdd2>첨부된 파일이 없습니다.</xMsg_attachNoAdd2>
+	<xMsg_continueFileQuestion>%d 파일이 일부 전송된 상태입니다.|계속 이어서 파일을 전송할까요?</xMsg_continueFileQuestion>
+	<xMsg_fileTransferStop>전송을 중단하였습니다.</xMsg_fileTransferStop>
+	<xMsg_continueFileDownQuestion>%d 파일을 이어서 다운로드 받을수 있는 상태입니다.|계속 이어서 파일을 다운로드 받을까요?</xMsg_continueFileDownQuestion>
+	<xMsg_makingDownloadFile>다운로드 파일 내부 생성중</xMsg_makingDownloadFile>
+	<xMsg_dontPageMove>해당 작업 도중 페이지 이동하면 파일다운로드를 정상적으로 수행할 수 없습니다.</xMsg_dontPageMove>
+	<xMsg_onlyoneMoveFile>파일의 위치 이동은 1건만 가능합니다.</xMsg_onlyoneMoveFile>
+	
+	<!-- v2 제품 정보 다이얼로그 -->
+	<xMsg_productInformation>제품 정보</xMsg_productInformation>
+	<xMsg_licenseInfo>이 제품은 다음 사용자에게 등록 되어 있습니다.</xMsg_licenseInfo>
+	<xMsg_companyName>업체명</xMsg_companyName>
+	<xMsg_licenseType>라이센스</xMsg_licenseType>
+	<xMsg_devGuide>개발자 가이드</xMsg_devGuide>
+	<xMsg_userGuide>사용자 가이드</xMsg_userGuide>
+	
+	<!-- v2 파일전송창 다이얼로그 -->
+	<xMsg_transferFile>전송 파일</xMsg_transferFile>
+	<xMsg_transmissionCapacity>전송 용량</xMsg_transmissionCapacity>
+	<xMsg_baudRate>전송 속도</xMsg_baudRate>
+	<xMsg_timeRemaining>남은 시간</xMsg_timeRemaining>
+	<xMsg_detailData>자세히</xMsg_detailData>
+	<xMsg_simplyData>간단히</xMsg_simplyData>
+	<xMsg_abort>일시정지</xMsg_abort>
+	<xMsg_restart>다시시작</xMsg_restart>
+	
+	<!-- v2 파일정보창 다이얼로그 -->
+	<xMsg_fileInformation>파일 정보</xMsg_fileInformation>
+	<xMsg_fileName2>파일명</xMsg_fileName2>
+	<xMsg_uploadSize2>파일크기</xMsg_uploadSize2>
+	<xMsg_fileFormat>파일형식</xMsg_fileFormat>
+	<xMsg_fileCreationDate>파일생성날짜</xMsg_fileCreationDate>
+	<xMsg_filePath>파일위치</xMsg_filePath>
+	
+	<!-- v2 업로드 제한설정 정보 팝업 창 다이얼로그 -->
+	<xMsg_aboutUploadLimitSetting>업로드 제한설정 정보</xMsg_aboutUploadLimitSetting>
+	<xMsg_numberOfUploads>업로드 가능 수</xMsg_numberOfUploads>
+	<xMsg_uploadableCapacitySingle>업로드 단일파일 가능용량</xMsg_uploadableCapacitySingle>
+	<xMsg_uploadableCapacity>업로드 전체파일 가능용량</xMsg_uploadableCapacity>
+	<xMsg_count2>건</xMsg_count2>
+	
+	<!-- v2 XFU의 마우스 우측 컨텍스트 메뉴 -->
+	<xMsg_selectedImgViewer>선택된 이미지 미리보기</xMsg_selectedImgViewer>
+	
+	<!-- v2 이미지 미리보기 팝업 창 다이얼로그 -->
+	<xMsg_openImage>원본이미지 열기</xMsg_openImage>
+	<xMsg_openImageSizeOver>해당 로컬 이미지 사이즈가 커서 미리보기가 불가능합니다.</xMsg_openImageSizeOver>
+	<xMsg_openImageSizeOverAlertMsg>해당 고용량 이미지는 원본이미지 열기로 대체합니다.</xMsg_openImageSizeOverAlertMsg>
+	<xMsg_rotateLeft>좌회전</xMsg_rotateLeft>
+	<xMsg_rotateRight>우회전</xMsg_rotateRight>
+	<xMsg_scaleX>좌우반전</xMsg_scaleX>
+	<xMsg_scaleY>상하반전</xMsg_scaleY>
+	
+</xFreeUploader>

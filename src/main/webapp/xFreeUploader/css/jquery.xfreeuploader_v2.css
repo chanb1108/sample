@@ -1,0 +1,142 @@
+﻿/*@import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);*/
+
+@charset "utf-8";
+/*-------------------------
+    Fileupload Control
+--------------------------*/
+* {
+    font-size: 11px;
+    font-family: Arial, '맑은 고딕';
+	src: url('./malgun.ttf') format('truetype');
+    margin: 0px;
+    padding: 0px;
+}
+
+/*
+ * v2 
+ */
+
+ /* list mode */
+ /*
+.xFreeUploader-left-pnl .xFreeUpload-listDataRow-pnl{
+	border : 1px solid #ffffff;
+} 
+
+.xFreeUploader-left-pnl .xFreeUpload-listDataRow-pnl:hover{
+	background-color : #FFF2E5;
+	border : 1px solid #FDA04B;
+	cursor:pointer !important;	
+}
+*/
+
+/* icon mode */  
+/*
+.xFreeUploader-left-pnl .root-list-li .working input{
+	display : none;
+}
+
+.xFreeUploader-left-pnl .root-list-li{
+	float : left;
+	width : 90px;
+	height : 95px;
+	margin : 5px;
+	padding : 4px;
+	list-style : none !important;	
+	border : 1px solid #f5f5f5;
+	background-color : #f5f5f5;
+}
+.xFreeUploader-left-pnl .root-list-li:hover{
+	background-color : #FFF2E5 !important;
+	border : 1px solid #FDA04B !important;
+}
+.xFreeUploader-left-pnl .square-ul{
+	position : relative;
+	width : 100%;
+	height : 100%;
+	overflow : hidden;
+	cursor : pointer;
+	list-style : none !important;
+	padding : 0px;
+	margin : 0px;
+}
+.xFreeUploader-left-pnl .x-ficon{
+	display: flex;
+    align-items: center;
+    justify-content: center;
+    border-left-width: 1px;
+    padding-bottom: 0px;
+}
+.xFreeUploader-left-pnl .x-fname{
+	display: flex;
+    justify-content: center;
+}
+.xFreeUploader-left-pnl .x-fname-img{
+	display: flex;
+    align-items: center;
+    height: 50px;
+}
+.xFreeUploader-left-pnl .x-fname-img-ie{
+	display: flex;
+    align-items: center;
+    height: 50px;
+}
+.xFreeUploader-left-pnl .x-fname-txt{
+	display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 12px;
+    color: #444444;
+    font-weight: bold;
+    width: 90px;
+    margin: 3px 0;
+    text-align: center;
+}
+.xFreeUploader-left-pnl .x-chk{
+	display: flex;
+}
+.xFreeUploader-left-pnl .x-chk input[type=checkbox]{
+	vertical-align: middle;
+	cursor : pointer;
+}
+.xFreeUploader-left-pnl .x-fsize{
+	display: flex;
+    align-items: center;
+    margin: 0 4px 0 0;
+    color: #7e7e7e;
+	font-size: 12px;
+}
+*/
+
+/* mobile mode */  
+/*	
+.xFreeUploader-left-pnl .xFreeUpload-listMobileDataRow-pnl{
+	border : 1px solid #ffffff;	
+} 
+.xFreeUploader-left-pnl .xFreeUpload-listMobileDataRow-pnl:hover{
+	
+	background-color : #FFF2E5;	
+	border : 1px solid #FDA04B;	
+	cursor:pointer !important;	
+}
+*/
+
+@media (max-width: 767px) {
+	.xFreeUploader-left-pnl{		
+		width : 100%;
+	}
+	
+	.xFreeUploader-right-pnl{		
+		display:none;
+	}
+}
+
+@media (min-width: 1025px) {
+	.xFreeUploader-left-pnl{		
+		width : calc(100% - 205px);
+	}
+	
+	.xFreeUploader-right-pnl{		
+		display:table;
+	}
+}

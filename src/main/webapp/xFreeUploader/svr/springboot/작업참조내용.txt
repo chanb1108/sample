@@ -1,0 +1,277 @@
+기존 자바의 경우 JSP를 호출하여 처리하던 방식을 매핑된 주소에서 처리 후 프론트쪽으로 보내주는 방식으로 변경
+주소 매핑을 위한 서버를 따로 돌리는 방식이 아니므로 해당 컨트롤러 파일쪽에 class 파일 세팅.
+
+클래스 파일의 패키지는 다음과 같다.
+package com.tagfree.xFreeUploader
+
+
+★★★ 
+xFreeUploader 폴더 위치의 경우 프로젝트에서 인식하는 파일 루트 위치에 올려주면 된다.
+
+
+● 파일 구성
+ㆍspringboot_java8,11
+ㄴXFreeUploader.java : 원본 소스
+ㄴXFreeUploader_8.class : 자바8 컴파일
+ㄴXFreeUploader_11.class : 자바11 컴파일
+
+ㆍspringboot_java17
+ㄴXFreeUploader.java : 원본 소스
+ㄴXFreeUploader.class : 자바17 컴파일
+
+ㆍexample_xfu_download.jsp : 테스트했던 샘플 페이지
+ㆍexample_xfu_upload.jsp : 테스트했던 샘플 페이지
+
+
+※ XFreeUploader.java : 업로드, 다운로드 호출하는 메소드가 있는 자바 파일
+
+
+
+
+● 변경내용 및 세팅
+
+
+※ 기존 존재하던 jar 파일과 getServletContext() 메소드 사용을 위해 아래와 같이 추가적으로 설정.
+commons-codec-1.5.jar
+gson-2.8.0.jar
+json-simple-1.1.jar
+cos.jar 
+★ 스프링부트에서 사용 시 java.io.IOException: Corrupt form data: premature ending 해당 에러가 발생하여 사용하지 않는다.
+org.springframework.web.multipart.MultipartFile;
+
+
+ㆍMaven (pom.xml)
+<!-- TAGFREE X-Free JAVA START -->
+<!-- Apache Commons Codec -->
+<dependency>
+	<groupId>commons-codec</groupId>
+	<artifactId>commons-codec</artifactId>
+	<version>1.5</version>
+</dependency>
+
+<!-- gson -->
+<dependency>
+	<groupId>com.google.code.gson</groupId>
+	<artifactId>gson</artifactId>
+	<version>2.8.0</version>
+</dependency>
+
+<!-- JSON Simple -->
+<dependency>
+	<groupId>com.googlecode.json-simple</groupId>
+	<artifactId>json-simple</artifactId>
+	<version>1.1</version>
+</dependency>
+
+<dependency>
+	<groupId>jakarta.servlet</groupId>
+	<artifactId>jakarta.servlet-api</artifactId>
+	<version>5.0.0</version>
+	<scope>provided</scope>
+</dependency>
+<!-- TAGFREE X-Free JAVA END -->
+
+
+ㆍGradle
+- Groovy (build.gradle)
+dependencies {
+	//TAGFREE X-Free JAVA START
+    // Apache Commons Codec
+    implementation 'commons-codec:commons-codec:1.5'
+
+    // Gson
+    implementation 'com.google.code.gson:gson:2.8.0'
+
+    // JSON Simple
+    implementation 'com.googlecode.json-simple:json-simple:1.1'
+
+    // Jakarta Servlet API (Provided scope)
+    providedCompile 'jakarta.servlet:jakarta.servlet-api:5.0.0'
+	//TAGFREE X-Free JAVA END
+}
+
+- Kotlin DSL (build.gradle.kts)
+dependencies {
+	//TAGFREE X-Free JAVA START
+    // Apache Commons Codec
+    implementation("commons-codec:commons-codec:1.5")
+
+    // Gson
+    implementation("com.google.code.gson:gson:2.8.0")
+
+    // JSON Simple
+    implementation("com.googlecode.json-simple:json-simple:1.1")
+
+    // Jakarta Servlet API (Provided scope)
+    providedCompile("jakarta.servlet:jakarta.servlet-api:5.0.0")
+	//TAGFREE X-Free JAVA END
+}
+
+- application.properites
+spring.servlet.multipart.enabled=true
+spring.servlet.multipart.max-file-size=-1
+spring.servlet.multipart.max-request-size=-1
+
+server.connection-timeout=600000
+
+
+★★
+xFreeUploader 생성 시 다음과 같이 키값을 추가한다. 
+
+Upload
+uploadUrl : "/tagfree/xfuUpload"
+
+Download
+fileListUrl : "/tagfree/xfuDownload",
+downloadUrl : "/tagfree/xfuDownload"
+
+
+
+XFreeUploader.java
+
+● Upload
+
+@ResponseBody
+@RequestMapping({"/xFreeUploader/tagfree/xfuUpload"})
+public String xufUploadJsp(@RequestParam Map<String, Object> map, HttpServletRequest request, HttpServletResponse response) throws Exception
+
+
+ㆍ컨트롤러 매핑 주소 : "/xFreeUploader/tagfree/xfuUpload"
+페이지에는 uploadUrl : "/tagfree/xfuUpload" 으로 세팅.
+
+ㆍ컨트롤러 메소드 파라미터 설명
+@RequestBody Map<String, Object> map
+: "키":"값" 형식을 받기 위해 사용할 Map 타입의 파라미터
+
+
+HttpServletRequest request
+: jsp에서 처럼 getServletContext()을 단독 사용이 애매하여 받는 파라미터
+
+ex)
+String uploadPath = getServletContext().getRealPath("/");
+→ String uploadPath = request.getServletContext().getRealPath("/");
+
+
+HttpServletRequest response 
+: 기존 로직 response 처리를 위한 파라미터
+
+
+ㆍ변경한 부분
+/* 분기처리를 위한 state 값
+ * DELETE						: 파일 삭제
+ * FOLDERDELETE			: 빈폴더 삭제 (파일 삭제로 인하여 발생할 수 있는 날짜명의 빈폴더 삭제)
+ * REUPLOADFILEINFO	: 이어서 전송을 위한 파일정보 가져오기
+ * UPLOAD					: 파일 업로드
+*/
+※기존 로직에 총 4개의 분기처리가 있으며 jsp에서 out.println 활용하던 부분을 String 타입의 결과값으로 return
+
+
+String result = "errorResult"; // 분기처리 되지 않을 경우 에러값을 리턴
+
+* DELETE : 파일 삭제
+if( file.exists() ){
+	if(file.delete()){
+		//out.println("파일삭제 성공");
+		result = "파일삭제 성공";
+	}else{
+		//out.println("파일삭제 실패");
+		result = "파일삭제 실패";
+	}
+}else{
+	//out.println("파일이 존재하지 않습니다. : " + sDelPath);
+	result = "파일이 존재하지 않습니다. : " + sDelPath;
+}
+
+
+* FOLDERDELETE : 빈폴더 삭제 (파일 삭제로 인하여 발생할 수 있는 날짜명의 빈폴더 삭제)
+//out.println(deleteEmptyDir(emptyForders));
+result = deleteEmptyDir(emptyForders);
+
+
+* REUPLOADFILEINFO	: 이어서 전송을 위한 파일정보 가져오기
+// 프런트단에 json형식으로 넘긴다.
+//out.println(arr.toString());
+result = arr.toString();
+
+
+* UPLOAD : 파일 업로드
+//out.println(jArray.toString());
+result = jArray.toString();
+★
+cos(com.oreilly.servlet)의 MultipartRequest를 이용해서 업로드 !!!
+// request,파일저장경로,용량,인코딩타입,중복파일명에 대한 기본 정책
+기존에 사용하던 cos가 Spring Boot에서 사용 시 java.io.IOException: Corrupt form data: premature ending 해당 에러가 발생하여 사용하지 않는다.
+그래서 reuqest 받는 타입인 org.springframework.web.multipart.MultipartHttpServletRequest를 활용하여
+org.springframework.web.multipart.MultipartFile 타입으로 변환 후 사용하는 형식으로 변경.
+(Spring Boot에서 기본적으로 제공하는 것이기 때문에 의존성 주입이 따로 필요하진 않을 것으로 보인다)
+그래서 중복파일명 처리를 위해 사용하던 new DefaultFileRenamePolicy()를 사용하지 못하므로 '파일이름@@UUID.확장자' 형식으로 파일 중복을 대체하였다. 
+// 화면에 보여지는 파일명에 대해서 변경이 필요할 경우 둘중 하나를 사용
+//object1.addProperty("fileReName",fileName1); // UUID 포함된 파일명
+object1.addProperty("fileReName",originalName1); // 유저가 업로드한 파일명
+
+
+(Spring Framework, java8 버전에서는 정상적으로 돌아가는것을 확인하여 기존것을 사용하는 방식으로 사용.)
+
+
+
+ㆍ그 외 필요없는 내용들은 주석 처리 및 추가 메소드
+ex)
+//out.clear(); → JSP가 아니므로 필요없는 구문
+//out.flush(); → JSP가 아니므로 필요없는 구문	
+
+
+
+
+
+● Download
+
+/**
+ * 다운로드 관련 컨트롤러 메소드
+ * @param map : "키":"값" 형식을 받기 위해 사용할 Map 타입의 파라미터 
+ * @param request : getServletContext() 사용을 위한 파라미터
+ * @param response : 기존 로직 response 처리를 위한 파라미터
+ * @return : String 타입의 결과값 반환 (기존 out.println)
+ */
+@ResponseBody
+@RequestMapping({"/xFreeUploader/tagfree/xfuDownload"})
+public String xufDownloadJsp(@RequestParam Map<String, Object> map, HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+
+다운로드의 경우 jsp 코드를 컨트롤러로 호출하게 하였을 때, 충돌나는 부분이 없어서 크게 변경된 부분은 없다. 
+
+※기존 로직에 총 3개의 분기처리가 있으며(주석에는 2개만 나와있어서 추가) 결과값만 String 문자열로 return주도록 수정하였다.
+(out.println 으로 활용하는 게 없어서 사용 안해도 큰 의미는 없다. 파라미터의 경우 통일성을 위해 맞춰줬다)
+
+// 코드에서는 3가지 분기가 존재.
+/* 분기처리를 위한 state 값
+ * FILELIST			: 파일 조회
+ * REUPLOADFILEINFO : 이어서 다운을 위한 파일정보 가져오기?
+ * DOWNLOAD	: 파일 다운로드
+*/
+
+ * FILELIST			: 파일 조회
+// 파일조회 실행(하위 폴더까지 모두 조회됨) 
+String tRootPath = DirectoryBrowser ( RootPath, filterWord, webPath ) ; 
+tRootPath = tRootPath.replace ( RootPath + "/" , "" ) ;
+//out.println( tRootPath ) ;
+result = tRootPath;
+
+
+ * REUPLOADFILEINFO : 이어서 다운을 위한 파일정보 가져오기?
+// 프런트단에 json형식으로 넘긴다.
+//out.println(arr.toString());
+result = arr.toString();
+ 
+ 
+ * DOWNLOAD	: 파일 다운로드
+	result = "download complete";
+} catch(IOException ioe){
+	//System.out.println("errMsg : " + ioe.getMessage());
+	System.out.println("single download error");
+	result = "single download error";
+
+		result = "download complete";
+} catch(IOException ioe) {
+	//System.out.println("errMsg : " + ioe.getMessage());			
+	System.out.println("multi download error");
+	result = "multi download error";

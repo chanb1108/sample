@@ -1,0 +1,415 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="-1" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1, user-scalable=no"/>
+<title>정렬 기능</title>
+<link rel="stylesheet" href="./images/ex_v2.css" type="text/css" media="screen"/>
+<script type="text/javascript" src="../../js/xFreeUploader.js"></script>
+
+<!-- 예제샘플용 공통함수 -->
+<script type="text/javascript" src="./xfu_ex_common.js"></script>
+
+<script type="text/javascript">
+// 업다운로드 전역변수
+var wFileUpload;
+var wFileDownload;
+
+// 서버타입 변수
+var strServerType = "php";
+
+// 정렬 Flag변수
+var upFileNameFlag = true;
+var upFileSizeFlag = true;
+var downFileNameFlag = true;
+var downFileSizeFlag = true;
+var downFileExtFlag = true;
+
+var origin = document.location.origin;
+var xfuBasePath = "/xFreeUploader";
+
+//var xfuFilePath = "/xFreeUploader/uploads";
+var xfuFilePath = xfuBasePath + "/uploads";
+
+if(origin) {
+
+	xfuBasePath = origin + xfuBasePath;
+} 
+else {
+
+	xfuBasePath = document.location.protocol + '//' + document.location.host + xfuBasePath;
+}
+
+// 태그프리 홈페이지 분기처리
+if(xfu_ex_common.checkDomain()){
+	
+	xfuBasePath = "/xfu_test/v2/xFreeUploader";
+	
+	//xfuFilePath = "/xfu_test/v2/xFreeUploader/uploads";
+	xfuFilePath = xfuBasePath + "/uploads";
+	
+	if(origin) {
+
+		xfuBasePath = origin + xfuBasePath;
+	} 
+	else {
+	
+		xfuBasePath = document.location.protocol + '//' + document.location.host + xfuBasePath;
+	}
+}
+
+// 업로드모드
+var wFileUploadObj = {
+	render: "fileUpload",
+	basePath : xfuBasePath,
+	selectMode: "upload",
+	filePath : xfuFilePath,
+	serverType: "php",
+	maxCount: 15,
+	singleMaxSize: 200,
+	totalMaxSize: 1024,
+	bodyHeight: 250,
+	
+	customButtons: {
+		"체크선택항목▲" : "uploadModeMoveUp()",
+		"체크선택항목▼" : "uploadModeMoveDown()"
+	},
+	buttonHide : ["btnFileAdd", "btnFileDelete"],
+	
+	onLoad: function (data) {
+		
+	},
+	// [파일추가] 버튼 클릭 이벤트핸들러
+	onAddFile: function (data) {
+		console.log("파일추가");
+	},
+	// [항목제거] 버튼 클릭 이벤트핸들러
+	onDeleteFile: function (data) {
+		console.log("항목제거");
+	},
+	// [항목전체제거] 버튼 클릭 이벤트핸들러
+	onDeleteAllFile: function (data) {
+		console.log("항목전체제거");
+	},
+	// [전송(테스트)] 버튼 클릭 이벤트핸들러
+	onBeforeSubmit: function (data) {
+		console.log("파일전송하기전");
+	},
+	// 업로드 정상 콜백
+	onSuccessCallback: function (data) {
+		console.log("Upload success");
+		console.log(data);
+	},
+	// 업로드 비정상 콜백
+	onFailCallback: function (data) {
+		console.log("Upload fail");
+		console.log(data);
+	}
+};
+	
+// 다운로드모드
+var wFileDownloadObj = {
+	render: "fileDownload",
+	basePath : xfuBasePath,
+	selectMode: "download",
+	filePath : xfuFilePath,
+	serverType: "php",
+	bodyHeight: 250,
+	
+	customButtons: {
+		"체크선택항목▲": "downloadModeMoveUp()",
+		"체크선택항목▼": "downloadModeMoveDown()"
+	},
+	buttonHide : ["btnFileDownload"],
+	
+	// XFU 로드된 후 발생 이벤트
+	onLoad: function (data) {
+		//console.log("Load Complete");
+		//console.log(data);
+		
+		// 태그프리 사이트에서는 파일조회를 서버파일추가 방식으로 대체
+		if(xfu_ex_common.checkDomain()){
+		
+			// 서버파일추가
+			fileAttachAddTxt();				
+		} 
+		// 일반적인 테스트는 파일조회 처리
+		else {			
+			fileSearch();
+		}
+	},
+	// 파일 조회 submit 발생 전
+	onBeforeSearch: function (data) {
+		console.log("파일 조회 전");
+		console.log(data);
+	},
+	// 파일 조회 submit 발생 후
+	onSearchCallback: function (data) {
+		console.log("파일 조회 후");
+		console.log(data);
+	}
+};
+
+function init() {
+	
+	// 서버타입 자동세팅(/index.html로 접근시에만 정상적으로 동작)
+	if(parent.document.getElementById("serverType")){
+	
+		strServerType = parent.document.getElementById("serverType").value;
+	}
+	
+	wFileUploadObj["serverType"] = strServerType;
+	wFileDownloadObj["serverType"] = strServerType;
+	
+	// 파일업로드 자바스크립트 방식 호출
+	wFileUpload = new xFreeUploader(wFileUploadObj);
+	
+	// 파일다운로드 자바스크립트 방식 호출
+	wFileDownload = new xFreeUploader(wFileDownloadObj);
+}
+
+// 업로드-체크선택 위로 이동
+function uploadModeMoveUp() {
+	wFileUpload.moveItemUp();
+}
+
+// 업로드-체크선택 아래로 이동
+function uploadModeMoveDown() {
+	wFileUpload.moveItemDown();
+}
+
+// 다운로드-체크선택 위로 이동
+function downloadModeMoveUp() {
+	wFileDownload.moveItemUp();
+}
+
+// 다운로드-체크선택 아래로 이동
+function downloadModeMoveDown() {
+	wFileDownload.moveItemDown();
+}
+
+ // 업로드-정렬
+function setUploadListSort(columnldx) {
+	// 업로드-정렬초기화
+	if (arguments.length == 0) {
+		wFileUpload.setListSort();
+	}
+	else {
+		// 0 : 파일이름		
+		if(Number(columnldx) === 0){
+		
+			if(upFileNameFlag){
+			
+				wFileUpload.setListSort(columnldx, "desc");
+				upFileNameFlag = false;
+				document.getElementById("setUploadListSortFileName").innerText = "파일이름▼";
+			} 
+			else if(!upFileNameFlag){
+			
+				wFileUpload.setListSort(columnldx, "asc");
+				upFileNameFlag = true;
+				document.getElementById("setUploadListSortFileName").innerText = "파일이름▲";
+			}
+		}
+		// 1 : 파일크기
+		else if(Number(columnldx) === 1){
+		
+			if(upFileSizeFlag){
+			
+				wFileUpload.setListSort(columnldx, "desc");
+				upFileSizeFlag = false;
+				document.getElementById("setUploadListSortFileSize").innerText = "파일크기▼";
+			} 
+			else if(!upFileSizeFlag){
+			
+				wFileUpload.setListSort(columnldx, "asc");
+				upFileSizeFlag = true;
+				document.getElementById("setUploadListSortFileSize").innerText = "파일크기▲";
+			}
+		}
+		// 기타 확장자명(fileExt)
+		else if(String(columnldx) === "fileExt"){
+		
+			if(downFileExtFlag){
+			
+				wFileUpload.setListSort(columnldx, "desc");
+				downFileExtFlag = false;
+				document.getElementById("setUploadListSortFileExt").innerText = "확장자명▼";
+			} 
+			else if(!downFileExtFlag){
+			
+				wFileUpload.setListSort(columnldx, "asc");
+				downFileExtFlag = true;
+				document.getElementById("setUploadListSortFileExt").innerText = "확장자명▲";
+			}
+		}
+	}
+}
+
+// 다운로드-정렬
+function setDownloadListSort(columnldx) {
+	// 다운로드-정렬초기화
+	if (arguments.length == 0) {
+		wFileDownload.setListSort();
+	}
+	else {
+		// 0 : 파일이름		
+		if(Number(columnldx) === 0){
+		
+			if(downFileNameFlag){
+			
+				wFileDownload.setListSort(columnldx, "desc");
+				downFileNameFlag = false;
+				document.getElementById("setDownloadListSortFileName").innerText = "파일이름▼";
+			} 
+			else if(!downFileNameFlag){
+			
+				wFileDownload.setListSort(columnldx, "asc");
+				downFileNameFlag = true;
+				document.getElementById("setDownloadListSortFileName").innerText = "파일이름▲";
+			}
+		}
+		// 1 : 파일크기
+		else if(Number(columnldx) === 1){
+		
+			if(downFileSizeFlag){
+			
+				wFileDownload.setListSort(columnldx, "desc");
+				downFileSizeFlag = false;
+				document.getElementById("setDownloadListSortFileSize").innerText = "파일크기▼";
+			} 
+			else if(!downFileSizeFlag){
+			
+				wFileDownload.setListSort(columnldx, "asc");
+				downFileSizeFlag = true;
+				document.getElementById("setDownloadListSortFileSize").innerText = "파일크기▲";
+			}
+		}
+		// 기타 확장자명(fileExt)
+		else if(String(columnldx) === "fileExt"){
+		
+			if(downFileExtFlag){
+			
+				wFileDownload.setListSort(columnldx, "desc");
+				downFileExtFlag = false;
+				document.getElementById("setDownloadListSortFileExt").innerText = "확장자명▼";
+			} 
+			else if(!downFileExtFlag){
+			
+				wFileDownload.setListSort(columnldx, "asc");
+				downFileExtFlag = true;
+				document.getElementById("setDownloadListSortFileExt").innerText = "확장자명▲";
+			}
+		}
+	}
+}
+
+
+// 서버파일조회
+function fileSearch() {
+	var dataObj = {
+		"filePath": wFileDownload.options.filePath,
+		//"filterWord": wFileDownload.options.filterWord
+		"filterWord": "*"
+	};
+	wFileDownload.fileSearch(dataObj);
+}
+// 파일선택다운로드
+function fileSelectDownload() {
+	wFileDownload.fileSelectDownload();
+}
+
+</script>
+<style type="text/css">
+
+</style>
+</head>
+
+<body onload="init()">
+    <div class="title">정렬 기능</div>
+	<div class="comment">
+        <ul>
+			<li><b>설명</b></li>
+			<ul style="list-style-type: circle;">
+				<li>X-Free Uploader는 파일항목 순서의 정렬 기능을 제공합니다.</li>
+				<li>기본화면에서 드래그 앤 드롭 방식으로 파일항목의 순서를 변경할 수 있습니다.</li>
+				<li>X-Free Uploader에서 제공된 API함수를 이용하여 정렬 기능을 사용할 수 있습니다.</li>
+			</ul>
+		</ul>
+    </div>
+	<div class="table-pnl">
+		<table border="1" cellpadding="0" cellspacing="0">
+			<colgroup>
+				<col width="40%"/>
+				<col width="60%"/>
+			</colgroup>		
+			<tbody>
+				<tr>
+					<th style="text-align : center;"><p>버튼명</p></th>
+					<th style="text-align : center;"><p>기능 설명</p></th>
+				</tr>
+				<tr>
+					<td style="text-align : center;">파일 드래그 앤 드롭</td>
+					<td>첨부 및 조회된 파일항목을 드래그 앤 드롭하여 파일항목 순서를 변경할 수 있습니다.</td>
+				</tr>
+				<tr>
+					<td style="text-align : center;">파일이름▲ / ▼</td>
+					<td>파일이름 컬럼 정보 기준으로 파일목록 순서가 오름차순 / 내림차순 정렬됩니다.</td>
+				</tr>
+				<tr>
+					<td style="text-align : center;">파일크기▲ / ▼</td>
+					<td>파일크기 컬럼 정보 기준으로 파일목록 순서가 오름차순 / 내림차순 정렬됩니다.</td>
+				</tr>
+				<tr>
+					<td style="text-align : center;">확장자명▲ / ▼</td>
+					<td>파일확장자 정보 기준으로 파일목록 순서가 오름차순 / 내림차순 정렬됩니다.</td>
+				</tr>
+				<tr>
+					<td style="text-align : center;">정렬초기화</td>
+					<td>정렬하지 않은 최초 시점의 순서로 초기화처리되어 원복됩니다.</td>
+				</tr>
+				<tr>
+					<td style="text-align : center;">체크선택항목▲ / ▼</td>
+					<td>해당버튼을 누를 때마다 <b style="color:red">체크선택된 항목 1건</b>이 위 / 아래로 이동합니다.</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="colgroup-pnl">
+		<div class="colgroup-left-pnl">
+			<!-- file upload -->
+			<div class="caption-pnl">▶ 파일 업로드 - 정렬 관련 컨트롤</div>
+			<div class="example-button-pnl">				
+				<button type="button" id="setUploadListSortFileName" onclick="setUploadListSort(0);">파일이름▲</button>
+				<button type="button" id="setUploadListSortFileSize" onclick="setUploadListSort(1);">파일크기▲</button>
+				<button type="button" id="setUploadListSortFileExt" onclick="setUploadListSort('fileExt');">확장자명▲</button>
+				<button type="button" id="setUploadListSortReset" onclick="setUploadListSort();">정렬초기화</button>
+				<!--
+				<button type="button" id="setUploadListSortMoveItemUp" onclick="uploadModeMoveUp();">업로드_체크선택 위로 이동</button>
+				<button type="button" id="setUploadListSortMoveItemDown" onclick="uploadModeMoveDown();">업로드_체크선택 아래로 이동</button>			
+				-->
+			</div>
+			<div class="xFreeUploader-pnl" id="fileUpload"></div>
+		</div>
+		<div class="colgroup-right-pnl">
+			<!-- file download -->
+			<div class="caption-pnl">▶ 파일 다운로드 - 정렬 관련 컨트롤</div>
+			<div class="example-button-pnl">
+				<button type="button" id="setDownloadListSortFileName" onclick="setDownloadListSort(0);">파일이름▲</button>
+				<button type="button" id="setDownloadListSortFileSize" onclick="setDownloadListSort(1);">파일크기▲</button>
+				<button type="button" id="setDownloadListSortFileExt" onclick="setDownloadListSort('fileExt');">확장자명▲</button>
+				<button type="button" id="setDownloadListSortReset" onclick="setDownloadListSort();">정렬초기화</button>
+				<!--
+				<button type="button" id="setDownloadListSortMoveItemUp" onclick="downloadModeMoveUp();">다운로드_체크선택 위로 이동</button>
+				<button type="button" id="setDownloadListSortMoveItemDown" onclick="downloadModeMoveDown();">다운로드_체크선택 아래로 이동</button>
+				-->
+			</div>
+			<div class="xFreeUploader-pnl" id="fileDownload"></div>
+		</div>
+	</div>
+</body>
+</html>

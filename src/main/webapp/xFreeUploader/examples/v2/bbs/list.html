@@ -1,0 +1,397 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="-1" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1, user-scalable=no"/>
+<title>게시판 목록</title>
+<link rel="stylesheet" href="./css/bbs_common.css" type="text/css" media="screen"/>
+<link rel="stylesheet" href="../images/ex_v2.css" type="text/css" media="screen"/>
+<script type="text/javascript" src="./js/jquery-1.8.1.min.js"></script>
+
+<!-- 게시판 공통함수 -->
+<script type="text/javascript" src="./js/bbs_common.js"></script>
+<script type="text/javascript">
+/*
+ * [게시판 목록화면]
+ * 해당 게시판 예제는 DB를 사용하지 않고 dataobj.js에 json데이터를 텍스트로 저장하여 활용한 예제로 
+ * XFU를 연동한 게시판의 가장 기본적인 CRUD의 흐름을 개발자분들이 이해하기 쉽게 샘플로 제작한 페이지이므로 
+ * 일부분 정도만 참고하시면 됩니다.
+ */
+
+// 총 데이터 수
+var totalData; 
+
+// 한 페이지에 나타낼 글 수
+var dataPerPage; 
+
+// 페이징에 나타낼 페이지 수
+var pageCount = 10; 
+
+// 현재 페이지
+var globalCurrentPage=1; 
+
+// 게시물 데이터 보관용 전역변수
+var dataObj = [];
+
+// DOM OnLoad
+$(document).ready(function(){
+
+	// 한 페이지 나타낼 행 수 = 10개 기본
+	dataPerPage = $("#dataPerPage").val();
+	
+	// 게시물 데이터 조회
+	bbs_common.loadData("./uploads_bbs/dataobj.js", function(data){
+	
+		if(typeof(data) !== "undefined"){
+	
+			// totalData 구하기
+			totalData = data.length;
+			
+			// 데이터 전역변수에 데이터 세팅
+			dataObj = data;
+		
+			// 게시물 목록 출력
+			setDataToBoardList(data, 1, dataPerPage);
+			
+			//페이징 표시 호출
+			paging(totalData, dataPerPage, pageCount, 1);
+		}
+		
+		// 이벤트 핸들러 실행
+		eventHandler();
+	});
+});
+
+// 목록 데이터 가져오기
+function setDataToBoardList(data, currentPage, dataPerPage){
+
+	// 게시물 데이터 순번 내림차순으로 정렬 처리
+	var data = bbs_common.sortJSON(data, "no", "desc");
+	
+	// 게시물 목록은 모두 지워 내용 초기화
+	$(".list-pnl").find("tbody").find("tr").remove();
+	
+	var strHTML = "";
+	
+	//Number로 변환하지 않으면 아래에서 +를 할 경우 스트링 결합이 되어버림.. 
+	currentPage = Number(currentPage);
+	dataPerPage = Number(dataPerPage);
+		
+	// 페이징 정보에 맞게 게시물 목록 정보 출력
+	//for(var i=0; i<data.length; i++){
+	for (
+		var i = (currentPage - 1) * dataPerPage;
+		i < (currentPage - 1) * dataPerPage + dataPerPage;
+		i++
+	  ) {
+	
+		/*
+		console.log(data[i].no);
+		console.log(data[i].title);
+		console.log(data[i].writer);
+		console.log(data[i].writeDate);
+		console.log(data[i].count);
+		*/
+		
+		if(i < data.length){
+
+			strHTML += "<tr id=" + data[i].no + ">";
+			
+			// No
+			strHTML += "	<td>" + data[i].no + "</td>";			
+			
+			// 제목
+			strHTML += "	<td class='left' style='border-right: 0px !important;'>" + data[i].title + "</td>";
+			
+			// 첨부파일 표시
+			if(data[i].uploadData.length > 0){
+			
+				strHTML += "	<td style='border-left: 0px !important; background-image: url(./images/attach_file01.png); background-repeat: no-repeat; background-position:center center; background-size: 24px;'></td>";
+			} 
+			else {
+			
+				strHTML += "	<td style='border-left: 0px !important;'></td>";
+			}
+			
+			// 작성자
+			strHTML += "	<td>" + data[i].writer + "</td>";
+			
+			// 등록일
+			strHTML += "	<td>" + bbs_common.maskDate(data[i].writeDate) + "</td>";
+			
+			// 조회수
+			strHTML += "	<td>" + data[i].count + "</td>";
+			strHTML += "</tr>";
+		}
+		
+	}
+	
+	$(".list-pnl").find("tbody").append(strHTML);
+	
+	// 출력된 게시물 목록 행의 이벤트 핸들러 등록
+	$(".list-pnl").find("tbody").find("td").click(function(e){
+	
+		var id = Number(e.target.parentNode.getAttribute("id"));
+		
+		// 게시물 뷰어 페이지로 이동(get parameter 형식으로 선택한 순번 정보를 가지고 이동합니다.)
+		location.href = "./view.html?no=" + id;
+	
+		e.preventDefault(e);
+		e.stopPropagation(e);
+	});
+}
+
+
+// 해당 페이지의 이벤트 핸들러 등록
+function eventHandler(){
+
+	// [쓰기] 버튼 클릭
+	$("#btnNew").click(function(e){
+	
+		var id = Number(e.target.parentNode.getAttribute("id"));
+		
+		location.href = "./write.html";
+		
+		e.preventDefault(e);
+		e.stopPropagation(e);
+	});
+	
+	// 페이징 처리 행 개수 선택(히든 처리함)
+	$("#dataPerPage").change(function (e) {
+	
+		dataPerPage = $("#dataPerPage").val();
+		
+		//전역 변수에 담긴 globalCurrent 값을 이용하여 페이지 이동없이 글 표시개수 변경 
+		paging(totalData, dataPerPage, pageCount, globalCurrentPage);
+		
+		setDataToBoardList(dataObj, globalCurrentPage, dataPerPage)
+		
+		e.preventDefault(e);
+		e.stopPropagation(e);
+	});
+}
+
+// 페이징 실행
+function paging(totalData, dataPerPage, pageCount, currentPage) {
+	
+	console.log("currentPage : " + currentPage);
+
+	totalPage = Math.ceil(totalData / dataPerPage); //총 페이지 수
+  
+	if(totalPage<pageCount){
+	
+		pageCount=totalPage;
+	}
+  
+	var pageGroup = Math.ceil(currentPage / pageCount); // 페이지 그룹
+	var last = pageGroup * pageCount; //화면에 보여질 마지막 페이지 번호
+  
+	if (last > totalPage) {
+
+		last = totalPage;
+	}
+
+	var first = last - (pageCount - 1); //화면에 보여질 첫번째 페이지 번호
+	var next = last + 1;
+	var prev = first - 1;
+
+	var pageHtml = "";
+
+	if (prev > 0) {
+
+		pageHtml += "<li><a href='#' id='prev'> 이전 </a></li>";
+	}
+
+	//페이징 번호 표시 
+	for (var i = first; i <= last; i++) {
+	
+		if (currentPage == i) {
+		
+			pageHtml += "<li class='on'><a href='#' id='" + i + "'>" + i + "</a></li>";
+		} 
+		else {
+		
+			pageHtml += "<li><a href='#' id='" + i + "'>" + i + "</a></li>";
+		}
+	}
+
+	if (last < totalPage) {
+
+		pageHtml += "<li><a href='#' id='next'> 다음 </a></li>";
+	}
+
+	$("#pagingul").html(pageHtml);
+
+	var displayCount = "";
+	displayCount = "현재 " + currentPage + " - " + totalPage + " 페이지 / " + totalData + "건";
+	
+	$("#displayCount").text(displayCount);
+
+
+	//페이징 번호 클릭 이벤트 
+	$("#pagingul li a").click(function (e) {
+	
+		var $id = $(this).attr("id");
+		selectedPage = $(this).text();
+
+		if ($id == "next") {
+		
+			selectedPage = next;
+		}
+		
+		if ($id == "prev") {
+		
+			selectedPage = prev;
+		}
+
+		//전역변수에 선택한 페이지 번호를 담는다...
+		globalCurrentPage = selectedPage;
+		
+		//페이징 표시 재호출
+		paging(totalData, dataPerPage, pageCount, selectedPage);
+		
+		//글 목록 표시 재호출
+		setDataToBoardList(dataObj, selectedPage, dataPerPage);
+		
+		e.preventDefault(e);
+		e.stopPropagation(e);
+	});
+}
+
+</script>
+<style type="text/css">
+.list-pnl {
+	border: 1px solid #e2e2e2;
+    margin-bottom: 5px;
+	height: 570px;
+    overflow: auto;
+}
+.list-pnl table{
+	border-collapse: collapse;
+	width : 100%;
+	font-size : 12px;
+    border: none;
+    border-top: 1px solid rgb(205, 205, 205);
+    border-bottom: 1px solid rgb(224, 224, 224);
+}
+.list-pnl table tr{
+	border-bottom: 1px solid rgb(235,235,235);
+	line-height: 40px;
+}
+.list-pnl table tr:hover{
+	background : rgb(255, 242, 229);
+	
+}
+.list-pnl table th{
+	text-align: center;
+	padding: 5px;
+	background : #e2e2e2;
+	border : 1px solid #fff;
+}
+.list-pnl table td{
+	text-align: center;
+	cursor: pointer;
+	padding: 5px;
+	border : 1px solid rgb(224, 224, 224);
+}
+.left{
+	text-align: left !important;
+}
+
+.page-pnl{
+	border: 1px solid #ccc;
+	height: 32.8px;
+	float: left;
+}
+
+.page-pnl ul {
+    text-align: center;
+    display: inline-block;
+    border-right: 0;
+	list-style-type: none;
+	padding: 0px;
+	margin: 0px;
+}
+.page-pnl ul li {
+    text-align: center;
+    float: left;
+}
+.page-pnl ul li a {
+    display: block;
+    font-size: 14px;
+    padding: 9px 12px;
+    border-right: solid 1px #ccc;
+    box-sizing: border-box;
+}
+.page-pnl ul li.on {
+    background : #e2e2e2;
+}
+.page-pnl ul li.on a {
+    color: #fff;
+}
+#dataPerPage{
+	display: none;
+}
+#displayCount{
+	font-size: 12px;
+}
+</style>
+</head>
+
+<body>
+	<div class="title">게시판 샘플(No DB)</div>
+	<div class="comment">
+        <ul>
+			<li><b>설명</b></li>
+			<ul style="list-style-type: circle;">
+				<li>해당 게시판 예제는 <b>DB를 사용하지 않고 dataobj.js에 json데이터를 텍스트로 저장</b>하여 활용한 예제입니다.</li>
+				<li><b>X-Free Uploader를 연동한 게시판의 가장 기본적인 CRUD의 흐름을 개발자분들이 이해하기 쉽게 샘플로 제작한 페이지</b>이므로 일부분 정도만 참고하시면 됩니다.</li>
+			</ul>
+		</ul>
+    </div>
+	<select id="dataPerPage">
+		<option value="10">10개씩보기</option>
+        <option value="15">15개씩보기</option>
+        <option value="20">20개씩보기</option>
+	</select>
+	<div id="displayCount"></div>
+	<div class="list-pnl">
+		<table border="1" cellpadding="0" cellspacing="0">
+			<colgroup>
+				<col width="10%"/>
+				<col width="45%"/>
+				<col width="5%"/>
+				<col width="10%"/>
+				<col width="20%"/>
+				<col width="10%"/>
+			</colgroup>
+			<thead>
+				<tr class="result-header">
+					<th>No</th>
+					<th colspan="2">제목</th>
+					<th>작성자</th>
+					<th>등록일</th>
+					<th>조회수</th>
+				</tr>
+			</thead>
+			<tbody>
+				
+			</tbody>
+		</table>
+	</div>
+	
+	<div class="footer-pnl">
+		<div class="page-pnl">
+			<ul id="pagingul">
+			</ul>
+		</div>
+		<div class="footer">
+			<button type="button" id="btnNew">쓰기</button>
+		</div>
+	</div>
+</body>
+</html>

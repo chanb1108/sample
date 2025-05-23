@@ -1,0 +1,255 @@
+@font-face {
+  font-family: 'icomoon';
+  src:  url('fonts/icomoon.eot?yqgzp2');
+  src:  url('fonts/icomoon.eot?yqgzp2#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?yqgzp2') format('truetype'),
+    url('fonts/icomoon.woff?yqgzp2') format('woff'),
+    url('fonts/icomoon.svg?yqgzp2#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-arrow-bottom:before {
+  content: "\e900";
+}
+.icon-arrow-left:before {
+  content: "\e901";
+}
+.icon-arrow-right:before {
+  content: "\e902";
+}
+.icon-arrow-top:before {
+  content: "\e903";
+}
+.icon-blackspace-circle:before {
+  content: "\e904";
+}
+.icon-close:before {
+  content: "\e905";
+}
+.icon-download:before {
+  content: "\e906";
+}
+.icon-filter:before {
+  content: "\e907";
+}
+.icon-filter-full:before {
+  content: "\e908";
+}
+.icon-first:before {
+  content: "\e909";
+}
+.icon-folder:before {
+  content: "\e90a";
+}
+.icon-folder-open:before {
+  content: "\e90b";
+}
+.icon-last:before {
+  content: "\e90c";
+}
+.icon-menu:before {
+  content: "\e90d";
+}
+.icon-minus:before {
+  content: "\e90e";
+}
+.icon-minus-circle:before {
+  content: "\e90f";
+}
+.icon-next:before {
+  content: "\e910";
+}
+.icon-page:before {
+  content: "\e911";
+}
+.icon-page-alt:before {
+  content: "\e912";
+}
+.icon-page-excel:before {
+  content: "\e913";
+}
+.icon-pause:before {
+  content: "\e914";
+}
+.icon-pen:before {
+  content: "\e915";
+}
+.icon-pensil:before {
+  content: "\e916";
+}
+.icon-pin:before {
+  content: "\e917";
+}
+.icon-pin-alt:before {
+  content: "\e918";
+}
+.icon-angle-left:before {
+  content: "\e919";
+}
+.icon-angle-right:before {
+  content: "\e91a";
+}
+.icon-angles-left:before {
+  content: "\e91b";
+}
+.icon-angles-right:before {
+  content: "\e91c";
+}
+.icon-caret-bottom:before {
+  content: "\e91d";
+}
+.icon-caret-left:before {
+  content: "\e91e";
+}
+.icon-caret-right:before {
+  content: "\e91f";
+}
+.icon-caret-top:before {
+  content: "\e920";
+}
+.icon-pin-full:before {
+  content: "\e921";
+}
+.icon-pin-full-alt:before {
+  content: "\e922";
+}
+.icon-plis:before {
+  content: "\e923";
+}
+.icon-plus-circle:before {
+  content: "\e924";
+}
+.icon-prev:before {
+  content: "\e925";
+}
+.icon-question-circle:before {
+  content: "\e926";
+}
+.icon-slash-circle:before {
+  content: "\e927";
+}
+.icon-trash:before {
+  content: "\e928";
+}
+.icon-upload:before {
+  content: "\e929";
+}
+.icon-user:before {
+  content: "\e92a";
+}
+.icon-user-cirle:before {
+  content: "\e92b";
+}
+.icon-user-full:before {
+  content: "\e92c";
+}
+.icon-user-full-circle:before {
+  content: "\e92d";
+}
+.icon-comment-dots:before {
+  content: "\e92e";
+}
+.icon-message:before {
+  content: "\e92f";
+}
+.icon-message-dots:before {
+  content: "\e930";
+}
+.icon-users:before {
+  content: "\e931";
+}
+.icon-angle-bottom:before {
+  content: "\e932";
+}
+.icon-angle-top:before {
+  content: "\e933";
+}
+.icon-sort-default:before {
+  content: "\e934";
+}
+.icon-cal02:before {
+  content: "\e935";
+}
+.icon-cal01:before {
+  content: "\e936";
+}
+.icon-excl:before {
+  content: "\e937";
+}
+.icon-excl-full:before {
+  content: "\e93a";
+}
+.icon-check:before {
+  content: "\e938";
+}
+.icon-grip-h:before {
+  content: "\e939";
+}
+.icon-grip-v:before {
+  content: "\e93b";
+}
+.icon-filter-column:before {
+  content: "\e93c";
+}
+.icon-filter-fixcol:before {
+  content: "\e93d";
+}
+.icon-filter-fixcol-head:before {
+  content: "\e93e";
+}
+.icon-filter-fixcol-tail:before {
+  content: "\e93f";
+}
+.icon-filter-fixcol-body:before {
+  content: "\e940";
+}
+.icon-filter-copy:before {
+  content: "\e954";
+}
+.icon-filter-paste:before {
+  content: "\e955";
+}
+.icon-filter-redo:before {
+  content: "\e956";
+}
+.icon-filter-undo:before {
+  content: "\e957";
+}
+.icon-filter-asc:before {
+  content: "\e941";
+}
+.icon-filter-desc:before {
+  content: "\e942";
+}
+.icon-filter-cut:before {
+  content: "\e968";
+}
+.icon-__filter-reset:before {
+  content: "\e969";
+}
+.icon-insert-row:before {
+  content: "\e943";
+}
+.icon-append-row:before {
+  content: "\e944";
+}
+.icon-search:before {
+  content: "\e945";
+}

@@ -1,0 +1,28 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<!--[if lt IE 9]>
+<script src="0028_html5.js"></script>
+<![endif]-->
+<script type="text/javascript" src="0028_combo.min.js"></script>
+</head>
+<body>
+	<div class="perspective">
+    <section>
+		<article class="full">
+			  <div class="form-item"><label for="color">Color:</label><input type="text" id="color" name="color" value="#123456" style="width: 195px" /></div>
+			<link rel="stylesheet" type="text/css" media="screen" href="0028_farbtastic.css" />
+			<script type="text/javascript" charset="utf-8" src="0028_farbtastic.js"></script>
+			<script type="text/javascript" charset="utf-8">
+			  setTimeout(function() {
+				jQuery.farbtastic('#picker').linkTo('#color');
+			  }, 100);
+			</script>
+			<div id="picker"></div>
+		</article>
+    </section>
+	</div>
+</body>
+</html>

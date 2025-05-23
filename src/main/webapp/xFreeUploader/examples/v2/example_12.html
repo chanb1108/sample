@@ -1,0 +1,94 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="-1" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1, user-scalable=no"/>
+<title>iframe에 적용 방법</title>
+<link rel="stylesheet" href="./images/ex_v2.css" type="text/css" media="screen"/>
+<script type="text/javascript">
+function init(){
+
+	// 예시 내용 치환
+	var exFrameValue = ConvertSystemSourcetoHtml('<iframe src="./example_xfu_upload.html" frameborder="0" scrolling="no" data-xfuID="fileUpload" id="xfuUploadArea"></iframe>');
+	document.getElementById("exData").innerHTML = exFrameValue;
+	
+	// 파일전송 이벤트 핸들러(iframe 내부 함수 사용방법)
+	document.getElementById("btnSubmit").addEventListener("click", function(e){
+		
+		var xfuFrame = document.getElementById("xfuUploadArea").contentWindow;
+		xfuFrame.wFileUpload.fileSubmit();
+		
+		e.preventDefault(e);
+		e.stopPropagation(e);
+	});
+}
+
+function ConvertSystemSourcetoHtml(str){
+
+	str = str.replace(/</g,"&lt;");
+	str = str.replace(/>/g,"&gt;");
+	str = str.replace(/\"/g,"&quot;");
+	str = str.replace(/\'/g,"&#39;");
+	str = str.replace(/\n/g,"<br />");
+	return str;
+}
+
+</script>
+<style type="text/css">
+iframe{
+	border : 0;
+	width : 100%;
+	height: 242px;
+}
+.source{
+	border: 1px solid rgb(255, 242, 229);
+    background: rgb(255, 242, 229);
+}
+</style>
+</head>
+
+<body onload="init();">
+	<div class="title">iframe에 적용 방법</div>
+	<div class="comment">
+        <ul>
+			<li><b>설명</b></li>
+			<ul style="list-style-type: circle;">
+				<li>웹페이지에서 X-Free Uploader의 구성은 body태그 안에 div태그 추가하고 id와 class를 적용하여 세팅하는 걸 권장하나 경우에 따라 웹페이지에 iframe을 감싸서 사용하는 사례가 있습니다.</li>
+				<li>일반적인 웹페이지에 X-Free Uploader를 적용시 문제는 없으나 웹페이지 안에 iframe을 감싸서 X-Free Uploader를 넣고 사용해야하는 경우에는 팝업 창의 위치정보를 위해 아래와 같이 옵션 값을 적용해야 합니다.</li>
+				<li>iframe 태그 안에 <b>data-xfuID</b>라는 속성을 추가하고 render값이 선언된 <b>태그의 ID값(예 : "fileUpload")</b>을 명시합니다.</li>
+				<li><b>예  시</b></li>
+				<ul style="list-style-type: circle;" class="source">
+					<li><span id="exData"></span></li>
+				</ul>
+				<li><b style="color:red;">※ iframe 태그 안에 <b>data-xfuID</b>라는 속성을 추가하지 않고 실행시 팝업 창은 iframe 내부에 종속되어 잘려보일 수 있습니다.</b></li>
+				<li>해당 페이지의 소스를 참고하시면 <b>[파일전송]버튼은 해당 웹페이지의 태그</b>입니다. 자세한 정보는 해당 페이지 소스를 참고하시기 바랍니다.</li>
+			</ul>
+		</ul>
+    </div>
+    
+	
+	<div class="colgroup-pnl">
+		<div class="colgroup-left-pnl">
+			<div class="caption-pnl">▷ iframe 에 data-xfuID 속성 적용</div>			
+			<!--
+			"./example_xfu_upload.html" 페이지 안에 render값이 선언된 태그의 ID값을 data-xfuID 속성값에 명시합니다. (data-xfuID="fileUpload")
+			-->
+			<iframe src="./example_xfu_upload.html" frameborder = "0" scrolling = "no" data-xfuID="fileUpload" id="xfuUploadArea"></iframe>
+			<div class="example-button-pnl">
+				<button type="button" id="btnSubmit">파일전송</button>
+			</div>
+		</div>
+		<div class="colgroup-right-pnl">
+			<div class="caption-pnl">▷ iframe 에 data-xfuID 속성 미적용 (팝업창이 잘려보입니다.)</div>
+			<!--
+			"./example_xfu_download.html" 페이지 안에 render값이 선언된 태그의 ID값을 data-xfuID 속성값에 명시합니다. (data-xfuID="fileDownload")
+			-->
+			<iframe src="./example_xfu_download.html" frameborder = "0" scrolling = "no" id="xfuDownloadArea"></iframe>
+		</div>
+	</div>
+</body>
+</html>

@@ -55,6 +55,8 @@
         
         //-->
     </script>
+    <script src="./SBGrid3/sbgrid3.js" type="text/javascript"></script>
+    <link href="./SBGrid3/css/sbgrid3.css" rel="stylesheet" />    
 </head>
 
 <body style="text-align:center; margin:0 auto; display:inline; padding-top:100px;">
@@ -137,5 +139,30 @@
         	</div>
         </div>
     </form:form>
+    <div id="grid"></div>
 </body>
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+	<script type="text/javaScript" language="javascript">
+		calData = [
+			{'class': '매화반', 'name': '홍길동',  'number': '30534', 'korean': '75', 'english': '50'},
+			{'class': '매화반', 'name': '김철수',  'number': '30115', 'korean': '94', 'english': '84'},
+			{'class': '국화반', 'name': '최민지',  'number': '30742', 'korean': '84', 'english': '98'}
+		]
+		
+		let gridConfig = {
+				dataSource: calData,
+				container: "#grid",
+				width: "100%",
+				height: "400px",
+				colums: [
+					{field: 'class', caption: '반', width: 100},
+					{field: 'name', caption: '성명', width: 100},
+					{field: 'number', caption: '학번', width: 100},
+					{field: 'korean', caption: '국어', width: 100},
+					{field: 'english', caption: '영어', width: 100},
+				],
+		}
+		datagrid = SBGrid3.createGrid(gridConfig);
+		datagrid.refresh();
+	</script>
 </html>

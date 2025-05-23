@@ -1,0 +1,287 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%> 
+<!DOCTYPE html>
+<html>
+<head>
+<title>파일 업로드 전송</title>
+<link rel="stylesheet" href="/images/ex_v2.css" type="text/css" media="screen"/>
+<script type="text/javascript" src="/js/xFreeUploader.js"></script>
+<!-- <script type="text/javascript" src="/xFreeUploader/js/xFreeUploader.js"></script> -->
+
+<!-- 예제샘플용 공통함수 -->
+<script type="text/javascript" src="/xfu_ex_common.js"></script>
+
+<script type="text/javascript">
+var wFileUpload;
+var strServerType = "jsp";
+var xfuBasePath = "/xFreeUploader";
+
+// 파일전송 중인지 상태체크를 위한 Flag변수
+var isFileSubmitFlag = true;
+
+function init(){
+	// 서버타입 자동세팅(/index.html로 접근시에만 정상적으로 동작)
+	if(parent.document.getElementById("serverType")){
+	
+		strServerType = parent.document.getElementById("serverType").value;
+	}
+		
+	//var xfuFilePath = "/xFreeUploader/uploads";
+	var xfuFilePath = xfuBasePath + "/uploads";
+	
+	var origin = document.location.origin;
+	
+	if(origin) {
+	
+		xfuBasePath = origin + xfuBasePath;
+	} 
+	else {
+	
+		xfuBasePath = document.location.protocol + '//' + document.location.host + xfuBasePath;
+	}
+	
+	
+	// 태그프리 홈페이지 분기처리
+	if(xfu_ex_common.checkDomain()){
+	
+		xfuBasePath = "/xfu_test/v2/xFreeUploader";
+		
+		//xfuFilePath = "/xfu_test/v2/xFreeUploader/uploads";
+		xfuFilePath = xfuBasePath + "/uploads";
+		
+		if(origin) {
+	
+			xfuBasePath = origin + xfuBasePath;
+		} 
+		else {
+		
+			xfuBasePath = document.location.protocol + '//' + document.location.host + xfuBasePath;
+		}
+		
+		
+	}
+	
+	// 파일업로드 자바스크립트 방식 호출
+	wFileUpload = new xFreeUploader({
+		render : "fileUpload",
+		basePath : xfuBasePath,
+		selectMode : "upload",
+		uploadUrl : "/tagfree/xfuUpload",
+		filePath : "/uploads",
+		//serverType: "php",
+		serverType : strServerType,
+		maxCount : 15,
+		singleMaxSize: 200,
+		totalMaxSize: 1024,
+		bodyHeight: 250,
+		skinType : -1,
+		
+		// [파일추가] 버튼 클릭 이벤트핸들러
+		onAddFile: function (data) {
+			console.log("파일추가");
+		},
+		// [선택제거] 버튼 클릭 이벤트핸들러
+		onDeleteFile: function (data) {
+			console.log("선택제거");
+		},
+		// [전체선택제거] 버튼 클릭 이벤트핸들러
+		onDeleteAllFile: function (data) {
+			console.log("전체선택제거");
+		},
+		// [전송(테스트)] 버튼 클릭 이벤트핸들러
+		onBeforeSubmit: function (data) {
+			console.log("파일전송하기전");
+			
+			isFileSubmitFlag = false;
+			
+			// 태그프리 사이트에서는 해당 기능 잠금
+			if(xfu_ex_common.checkDomain()){
+			
+				alert("파일업로드 전송을 원하신다면 X-Free Uploader 체험센터 게시판을 이용부탁드립니다.\n상세한 테스트를 원하시면 X-Free Uploader 체험판을 받아 이용해보시기 바랍니다.");
+				return false;
+			}
+		},                                  
+		// 업로드 정상 콜백
+		onSuccessCallback: function (data) {
+			console.log("Upload success");
+			console.log(data);
+		},
+		// 업로드 정상 콜백
+		onAllSuccessCallback: function (data) {
+			
+			isFileSubmitFlag = true;
+			
+			if(isFileSubmitFlag){
+			
+				fnAddRowResultData(data);
+			}
+			
+			console.log("All Files Upload success");
+			console.log(data);
+		},
+		// 업로드 비정상 콜백
+		onFailCallback: function (data) {
+			console.log("Upload fail");
+			console.log(data);
+			
+			isFileSubmitFlag = true;
+		},
+		onLoad : function(data){
+		
+			
+		}
+	});
+}
+
+// 파일추가
+function fileAdd() {
+	wFileUpload.fileAdd();
+}
+// 파일전송
+function fileSubmit() { // 버튼 클릭 시 이 메소드를 탄다.
+
+ 	if(isFileSubmitFlag){
+		wFileUpload.fileSubmit();
+	} 	
+}
+// 선택제거
+function fileDelete() {
+	wFileUpload.fileDelete();
+}
+// 전체선택제거
+function fileAllDelete() {
+	wFileUpload.fileAllDelete();
+}
+
+// 샘플페이지 하단 결과 출력
+function fnAddRowResultData(data){
+
+	var $resultPnlEle = $(".result-pnl");
+	var $resultBodyEle = $resultPnlEle.find("tbody");
+	
+	var strHtml = '';
+
+	for (var i = 0; i < data.length; i++) {
+		
+		//console.log(data[i].fileReName);    // n번째 중복처리된 파일명
+		//console.log(data[i].fileType);      // n번째 파일타입정보
+		//console.log(data[i].ext);      // n번째 파일확장자정보
+		//console.log(data[i].fileSize);      // n번째 파일크기
+		//console.log(data[i].savePath);      // n번째 저장경로
+		
+		strHtml += '<tr>';
+		strHtml += '	<td><span title="' + data[i].fileReName + '" style="display: block; overflow: hidden; text-overflow: ellipsis; text-align: center; word-break:break-all;">' + data[i].fileReName + '</span></td>';
+		strHtml += '	<td><span title="' + data[i].fileSize + '" style="display: block; overflow: hidden; text-overflow: ellipsis; text-align: center; word-break:break-all;">' + data[i].fileSize + ' bytes</span></td>';
+		strHtml += '	<td><span title="' + data[i].savePath + "/" + data[i].fileReName + '" style="display: block; overflow: hidden; text-overflow: ellipsis; word-break:break-all;">' + data[i].savePath + "/" + data[i].fileReName + '</span></td>';
+		strHtml += '</tr>';
+	}
+	
+	$resultBodyEle.append(strHtml);
+}
+
+
+</script>
+<style type="text/css">
+
+</style>
+</head>
+
+<body onload="init()">
+    <div class="title">파일 업로드 전송</div>
+    
+	<div class="caption-pnl">▶ 파일 업로드</div>
+	<div class="comment">
+        <ul>
+			<li><b>설명</b></li>
+			<ul style="list-style-type: circle;">
+				<li>X-Free Uploader 제품은 여러 건의 파일을 첨부추가하여 파일전송이 가능합니다.</li>
+				<li>첨부추가 방식은 [파일추가]버튼을 눌러 추가하는 방법과 파일을 Drag & Drop하여 추가할 수 있습니다.</li>
+			</ul>
+		</ul>
+    </div>
+	<div class="xFreeUploader-pnl" id="fileUpload"></div>
+	
+	<div class="colgroup-pnl">
+		<div class="colgroup-left-pnl">
+			<div class="caption-pnl">▷ 관련 컨트롤</div>
+			<div class="comment">
+				<ul>
+					<li><b>설명</b></li>
+				</ul>
+			</div>
+			<div class="table-pnl">
+				<table border="1" cellpadding="0" cellspacing="0">
+					<colgroup>
+						<col width="40%"/>
+						<col width="60%"/>
+					</colgroup>		
+					<tbody>
+						<tr>
+							<th><p>버튼</p></th>
+							<th><p>기능 설명</p></th>
+						</tr>
+						<tr>
+							<td style="text-align : center;">
+								<button type="button" id="fileAdd" onclick="fileAdd();">파일추가</button>
+							</td>
+							<td>파일탐색창이 열리고 전송할 파일을 선택합니다.</td>
+						</tr>
+						<tr>
+							<td style="text-align : center;">
+								<button type="button" id="fileDelete" onclick="fileDelete();">선택제거</button>
+							</td>
+							<td>원하는 항목을 체크선택하고나서 누르면 첨부목록에서 제거됩니다.<br/>(서버상의 파일은 미삭제)</td>
+						</tr>
+						<tr>
+							<td style="text-align : center;">
+								<button type="button" id="fileAllDelete" onclick="fileAllDelete();">전체선택제거</button>
+							</td>
+							<td>첨부추가된 목록 모두 제거됩니다.<br/>(서버상의 파일은 미삭제)</td>
+						</tr>
+						<tr>
+							<td style="text-align : center;">
+								<button type="button" id="fileSubmit" onclick="fileSubmit();">파일전송</button>
+							</td>
+							<td>파일이 첨부추가된 상태에서 누르면 파일이 전송됩니다.</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<!--
+			<div class="example-button-pnl">
+				<button type="button" id="fileAdd" onclick="fileAdd();">파일추가</button>
+				<button type="button" id="fileDelete" onclick="fileDelete();">선택제거</button>
+				<button type="button" id="fileAllDelete" onclick="fileAllDelete();">전체제거</button>
+				<button type="button" id="fileSubmit" onclick="fileSubmit();">파일전송</button>
+			</div>
+			-->
+		</div>
+		<div class="colgroup-right-pnl">
+			<div class="caption-pnl">▷ 전송 결과</div>
+			<div class="comment">
+				<ul>
+					<li><b>설명</b></li>
+					<ul style="list-style-type: circle;">
+						<li>전송된 파일의 정보는 아래와 같이 반환됩니다.</li>
+					</ul>	
+				</ul>
+			</div>
+			<div class="result-pnl">
+				<table border="1" cellpadding="0" cellspacing="0">
+					<colgroup>
+						<col width="25%"/>
+						<col width="15%"/>
+						<col width="60%"/>
+					</colgroup>		
+					<tbody>
+						<tr class="result-header">
+							<th><p>파일명</p></th>
+							<th><p>파일크기</p></th>
+							<th><p>전송된 경로</p></th>
+						</tr>			
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

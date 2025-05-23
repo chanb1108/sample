@@ -1,0 +1,23 @@
+﻿/*@import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);*/
+@charset "utf-8";
+
+* {
+    font-family: Arial, '맑은 고딕';
+}
+.footer{
+	float: right;
+}
+.footer button{
+	padding: 9px 25px;
+    border-radius: 2px;
+    letter-spacing: 6px;
+    border: 1px solid #d8d8d8;
+    color: #5e5e5e;
+    font-size: 13px;
+	cursor : pointer;
+	background : #fff;
+}
+.footer button:hover{
+	background : #e2e2e2;
+	color: #fff;
+}

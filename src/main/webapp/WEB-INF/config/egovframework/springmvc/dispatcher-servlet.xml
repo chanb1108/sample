@@ -14,6 +14,12 @@
     </context:component-scan>
 
     <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+        <property name="messageConverters">
+	        <list>
+	            <!-- Jackson JSON Converter -->
+	            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" />
+	        </list>
+	    </property>
         <property name="webBindingInitializer">
             <bean class="egovframework.example.cmmn.web.EgovBindingInitializer"/>
         </property>

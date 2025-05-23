@@ -1,0 +1,119 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<xFreeUploader>
+	
+	<!-- 기존 v1에서 사용중이었던 내용 -->
+	<xMsg_dropArea>ここにアップロードするファイルをマウスでドラッグし入れていただくか、ダブルクリックします。</xMsg_dropArea>
+	<xMsg_readyUpload>アップロードする準備ができています。</xMsg_readyUpload>
+	<xMsg_iframe>このブラウザでは、iframeがサポートされていません。</xMsg_iframe>
+	<xMsg_fileAdd>ファイルの追加</xMsg_fileAdd>
+	<xMsg_fileDelete>エントリを削除</xMsg_fileDelete>
+	<xMsg_fileAllDelete>項目全体を削除</xMsg_fileAllDelete>
+	<xMsg_fileSubmit>ファイル転送</xMsg_fileSubmit>
+	<xMsg_max>最大</xMsg_max>
+	<xMsg_count>件</xMsg_count>
+	<xMsg_limit>制限</xMsg_limit>
+	<xMsg_submitTimeRemain>転送速度（残り時間）</xMsg_submitTimeRemain>	
+	<xMsg_added>追加された</xMsg_added>
+	<xMsg_viewed>照会される</xMsg_viewed>
+	<xMsg_fileName>ファイル名</xMsg_fileName>	
+	<xMsg_uploadState>アップロード状態(%)</xMsg_uploadState>	
+	<xMsg_uploadSize>ファイルサイズ</xMsg_uploadSize>	
+	<xMsg_fileAddError>ファイルの添付エラーが発生!</xMsg_fileAddError>	
+	<xMsg_fileDelError>ファイルの添付を削除エラーが発生!</xMsg_fileDelError>	
+	<xMsg_fileDataError>ファイル添付データにエラーが発生!</xMsg_fileDataError>	
+	<xMsg_attachNoAdd>添付ファイルが追加されていない。 添付ファイルを選択して追加してください。</xMsg_attachNoAdd>	
+	<xMsg_directoryError>パスが正しく入力されていません。</xMsg_directoryError>	
+	<xMsg_overlapFile>ファイル添付リストに追加されているファイルです。</xMsg_overlapFile>	
+	<xMsg_maxCountLimit>件までアップロード可能です。</xMsg_maxCountLimit>	
+	<xMsg_maxSizeLimit>ファイル添付最大サイズを超えました。|ファイル名：</xMsg_maxSizeLimit>	
+	<xMsg_notExt>ファイルは添付できない拡張子です。</xMsg_notExt>	
+	<xMsg_serverError>サーバーとの通信中に問題が発生しました。</xMsg_serverError>	
+	<xMsg_allDelete>すべてのアイテムを削除しますか？</xMsg_allDelete>
+	<xMsg_uploadComplete>アップロードが完了しました。</xMsg_uploadComplete>
+	<xMsg_stateMsgAddFile>個のアイテムが追加されました。</xMsg_stateMsgAddFile>
+	<xMsg_stateMsgSelectedFileDelete>選択した項目が削除されました。</xMsg_stateMsgSelectedFileDelete>
+	<xMsg_stateMsgSelectedFilesDelete>個のアイテムが削除されました。</xMsg_stateMsgSelectedFilesDelete>
+	<xMsg_stateMsgAllFilesDelete>すべての項目が削除されました。</xMsg_stateMsgAllFilesDelete>
+	<xMsg_saveDate>保存した日付</xMsg_saveDate>
+	<xMsg_savePath>保存パス</xMsg_savePath>
+	<xMsg_fileType>ファイルの種類</xMsg_fileType>
+	<xMsg_fileSearch>ファイル再生</xMsg_fileSearch>
+	<xMsg_selectedDownload>選択ダウンロード</xMsg_selectedDownload>
+	<xMsg_AllDownload>フルダウンロード</xMsg_AllDownload>
+	<xMsg_AllClear>リストの初期化</xMsg_AllClear>
+	<xMsg_Open>オープン</xMsg_Open>
+	<xMsg_NotFoundAttachFileList>添付ファイルのリストが存在しません。</xMsg_NotFoundAttachFileList>
+	<xMsg_NotSelectedDownloadFile>ダウンロード項目を選択してください。</xMsg_NotSelectedDownloadFile>
+	<xMsg_stateMsgSearchFile>件の項目が照会されました。</xMsg_stateMsgSearchFile>
+	<xMsg_stateMsgSelectedFiles>項目が選択された。</xMsg_stateMsgSelectedFiles>
+	<xMsg_allDownload>すべてのアイテムをダウンロードしていただけますか？</xMsg_allDownload>
+	<xMsg_NotSelectedDeleteFile>削除するアイテムを選択してください。</xMsg_NotSelectedDeleteFile>
+	<xMsg_XssFileAlert>XSS攻撃の疑いファイルです。</xMsg_XssFileAlert>
+	<xMsg_selectedFileCheck>ファイル選択チェック</xMsg_selectedFileCheck>
+	<xMsg_addFileAllCheck>追加ファイル全体を選択</xMsg_addFileAllCheck>
+	
+	<!-- v2에서 새로 추가된 내용 -->
+	<xMsg_isValidIECheck>Internet Explorer 10 バージョン以降でのみ動作します。</xMsg_isValidIECheck>
+	<xMsg_fileAdd>ファイル追加</xMsg_fileAdd>
+	<xMsg_fileDelete2>選択解除</xMsg_fileDelete2>
+	<xMsg_versionInfo>製品情報</xMsg_versionInfo>
+	<xMsg_uploadLimitedFileTitle>使用中のファイル容量</xMsg_uploadLimitedFileTitle>
+	<xMsg_fileUsageCapacity>使用量</xMsg_fileUsageCapacity>
+	<xMsg_fileServingCapacity>提供量</xMsg_fileServingCapacity>
+	<xMsg_selectedDownload2>ダウンロード</xMsg_selectedDownload2>
+	<xMsg_readyDownload>ダウンロードする準備ができています。</xMsg_readyDownload>	
+	<xMsg_attachNoAdd2>添付ファイルはありません。</xMsg_attachNoAdd2>
+	<xMsg_continueFileQuestion>％dファイルが一部転送されています。|続いてファイルを転送しますか？</xMsg_continueFileQuestion>
+	<xMsg_fileTransferStop>転送を中止しました。</xMsg_fileTransferStop>
+	<xMsg_continueFileDownQuestion>％dファイルの後にダウンロードできる状態です。|続いてファイルをダウンロードしますか？</xMsg_continueFileDownQuestion>
+	<xMsg_makingDownloadFile>ダウンロードファイル内部生成中</xMsg_makingDownloadFile>
+	<xMsg_dontPageMove>その操作中にページを移動すると、ファイルのダウンロードを正常に実行できなくなります。</xMsg_dontPageMove>
+	<xMsg_onlyoneMoveFile>ファイルの位置の移動は1件のみ可能です。</xMsg_onlyoneMoveFile>
+	
+	<!-- v2 제품 정보 다이얼로그 -->
+	<xMsg_productInformation>製品情報</xMsg_productInformation>
+	<xMsg_licenseInfo>この製品は次のユーザーに登録されています。</xMsg_licenseInfo>
+	<xMsg_companyName>会社名</xMsg_companyName>
+	<xMsg_licenseType>ライセンス</xMsg_licenseType>
+	<xMsg_devGuide>開発者ガイド</xMsg_devGuide>
+	<xMsg_userGuide>ユーザーガイド</xMsg_userGuide>
+	
+	<!-- v2 파일전송창 다이얼로그 -->
+	<xMsg_transferFile>転送ファイル</xMsg_transferFile>
+	<xMsg_transmissionCapacity>伝送容量</xMsg_transmissionCapacity>
+	<xMsg_baudRate>ボーレート</xMsg_baudRate>
+	<xMsg_timeRemaining>残り時間</xMsg_timeRemaining>
+	<xMsg_detailData>詳細</xMsg_detailData>
+	<xMsg_simplyData>簡単に</xMsg_simplyData>
+	<xMsg_abort>一時停止</xMsg_abort>
+	<xMsg_restart>再起動</xMsg_restart>
+	
+	<!-- v2 파일정보창 다이얼로그 -->
+	<xMsg_fileInformation>ファイル情報</xMsg_fileInformation>
+	<xMsg_fileName2>ファイル名</xMsg_fileName2>
+	<xMsg_uploadSize2>ファイルサイズ</xMsg_uploadSize2>
+	<xMsg_fileFormat>ファイル形式</xMsg_fileFormat>
+	<xMsg_fileCreationDate>ファイル作成日</xMsg_fileCreationDate>
+	<xMsg_filePath>ファイル位置</xMsg_filePath>
+	
+	<!-- v2 업로드 제한설정 정보 팝업 창 다이얼로그 -->
+	<xMsg_aboutUploadLimitSetting>アップロード制限設定情報</xMsg_aboutUploadLimitSetting>
+	<xMsg_numberOfUploads>アップロード可能数</xMsg_numberOfUploads>
+	<xMsg_uploadableCapacitySingle>アップロードシングルファイル可能容量</xMsg_uploadableCapacitySingle>
+	<xMsg_uploadableCapacity>アップロードフルファイル可能容量</xMsg_uploadableCapacity>
+	<xMsg_count2>件</xMsg_count2>
+	
+	<!-- v2 XFU의 마우스 우측 컨텍스트 메뉴 -->
+	<xMsg_selectedImgViewer>選択した画像のプレビュー</xMsg_selectedImgViewer>
+	
+	<!-- v2 이미지 미리보기 팝업 창 다이얼로그 -->
+	<xMsg_openImage>元画像を開く</xMsg_openImage>
+	<xMsg_openImageSizeOver>対応するローカルイメージサイズが大きく、プレビューできません。</xMsg_openImageSizeOver>
+	<xMsg_openImageSizeOverAlertMsg>対応する大容量画像は元の画像を開くことに置き換えられます。</xMsg_openImageSizeOverAlertMsg>
+	<xMsg_rotateLeft>左折</xMsg_rotateLeft>
+	<xMsg_rotateRight>右折</xMsg_rotateRight>
+	<xMsg_scaleX>左右反転</xMsg_scaleX>
+	<xMsg_scaleY>上下反転</xMsg_scaleY>
+	
+</xFreeUploader>

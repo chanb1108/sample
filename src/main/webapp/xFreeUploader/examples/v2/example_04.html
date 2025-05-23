@@ -1,0 +1,617 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="-1" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1, user-scalable=no"/>
+<title>테마 UI 변경</title>
+<link rel="stylesheet" href="./images/ex_v2.css" type="text/css" media="screen"/>
+<script type="text/javascript" src="../../js/xFreeUploader.js"></script>
+
+<!-- 예제샘플용 공통함수 -->
+<script type="text/javascript" src="./xfu_ex_common.js"></script>
+
+<script type="text/javascript">
+var msgTest = "";
+var wFileUpload;
+var strServerType = "php";
+
+var origin = document.location.origin;
+var xfuBasePath = "/xFreeUploader";
+
+//var xfuFilePath = "/xFreeUploader/uploads";
+var xfuFilePath = xfuBasePath + "/uploads";
+
+if(origin) {
+
+	xfuBasePath = origin + xfuBasePath;
+} 
+else {
+
+	xfuBasePath = document.location.protocol + '//' + document.location.host + xfuBasePath;
+}
+	
+
+var xfuIconPath = xfuBasePath + "/img/v2/fileupload_2.png";
+
+// 태그프리 홈페이지 분기처리
+if(xfu_ex_common.checkDomain()){
+	
+	xfuBasePath = "/xfu_test/v2/xFreeUploader";
+		
+	//xfuFilePath = "/xfu_test/v2/xFreeUploader/uploads";
+	xfuFilePath = xfuBasePath + "/uploads";
+		
+	if(origin) {
+
+		xfuBasePath = origin + xfuBasePath;
+	} 
+	else {
+	
+		xfuBasePath = document.location.protocol + '//' + document.location.host + xfuBasePath;
+	}
+	
+	xfuIconPath = xfuBasePath + "/img/v2/fileupload_2.png";
+}
+
+var xfuOptionsObj = {
+	render: "fileUpload",
+	basePath : xfuBasePath,
+	selectMode: "upload",
+	filePath : xfuFilePath,
+	serverType: "php",
+	maxCount: 15,
+	singleMaxSize: 200,
+	totalMaxSize: 1024,
+	bodyHeight: 250,			
+	skinType : 0,
+	
+	// 사용자 커스텀 버튼 세팅(그러나 순서를 보장하지 못합니다.)
+	//customButtons : {},
+	
+	// 사용자 커스텀 버튼 순서를 위한 keyName List
+	customButtonsKeyName : [],
+	
+	// 사용자 커스텀 버튼 순서를 위한 keyValue List
+	customButtonsKeyValue : [],
+	
+	dropAreaImgUrl : xfuIconPath,
+	dropAreaImgSize : "40px",
+	
+	
+	// [파일추가] 버튼 클릭 이벤트핸들러
+	onAddFile: function (data) {
+		console.log("파일추가");
+	},
+	// [항목제거] 버튼 클릭 이벤트핸들러
+	onDeleteFile: function (data) {
+		console.log("항목제거");
+	},
+	// [항목전체제거] 버튼 클릭 이벤트핸들러
+	onDeleteAllFile: function (data) {
+		console.log("항목전체제거");
+	},
+	// [전송(테스트)] 버튼 클릭 이벤트핸들러
+	onBeforeSubmit: function (data) {
+		console.log("파일전송하기전");
+	},
+	// 업로드 정상 콜백
+	onSuccessCallback: function (data) {
+		console.log("Upload success");
+		console.log(data);
+	},
+	// 업로드 비정상 콜백
+	onFailCallback: function (data) {
+		console.log("Upload fail");
+		console.log(data);
+	},
+	onLoad : function(data){
+	
+		
+	}
+};
+
+function init() {
+
+	// 서버타입 자동세팅(/index.html로 접근시에만 정상적으로 동작)
+	if(parent.document.getElementById("serverType")){
+	
+		strServerType = parent.document.getElementById("serverType").value;
+	}
+	
+	xfuOptionsObj["serverType"] = strServerType;
+
+	// 파일업로드 자바스크립트 방식 호출
+	wFileUpload = new xFreeUploader(xfuOptionsObj);
+
+	// 색상테스트
+	/*
+	if(xfu_ex_common.checkDomain()){
+	
+		loadScript1("/xfu_test/v2/xFreeUploader/js/jquery-2.2.4.min.js", init2_callback);
+	} else {
+	
+		loadScript1("/xFreeUploader/js/jquery-2.2.4.min.js", init2_callback);
+	}
+	*/
+	loadScript1(xfuBasePath + "/js/jquery-2.2.4.min.js", init2_callback);
+}
+
+// 업로드-체크선택 위로 이동
+function setUploadListSortMoveItemUp() {
+	wFileUpload.moveItemUp();
+}
+
+// 업로드-체크선택 아래로 이동
+function setUploadListSortMoveItemDown() {
+	wFileUpload.moveItemDown();
+}
+
+function loadScript1(url, callback) {
+	var script = document.createElement('script');
+	script.type = "text/javascript";
+	script.src = url;
+	script.onload = function () {
+	
+		/*
+		if(xfu_ex_common.checkDomain()){
+	
+			loadScript2("/xfu_test/v2/xFreeUploader/thirdparty/colorPicker/farbtastic.js", callback);
+		} else {
+		
+			loadScript2("/xFreeUploader/thirdparty/colorPicker/farbtastic.js", callback);
+		}
+		*/
+		loadScript2(xfuBasePath + "/thirdparty/colorPicker/farbtastic.js", callback);
+	};
+	document.getElementsByTagName('head')[0].appendChild(script);
+}
+function loadScript2(url, callback) {
+	var script = document.createElement('script');
+	script.type = "text/javascript";
+	script.src = url;
+	script.onload = function () {
+		callback.call();
+	};
+	document.getElementsByTagName('head')[0].appendChild(script);
+}
+function init2_callback() {
+
+	// 테마 변경 영역 세팅
+	var xfuSkinObject = [
+		{color : '#a2a2a2', opacityColor : '#e3e3e3'},
+		{color : '#6a6a6a', opacityColor : '#d3d3d3'},
+		{color : '#484848', opacityColor : '#dddddd'},        
+		{color : '#795548', opacityColor : '#e6dfdd'},                
+		{color : '#558b2f', opacityColor : '#dfe9d8'},
+		{color : '#388e3c', opacityColor : '#daeada'},
+		{color : '#00838f', opacityColor : '#cfe8ea' },
+		{color : '#009688', opacityColor : '#cfebe9'},
+		{color : '#3f51b5', opacityColor : '#dbdef1'},
+		{color : '#0c4da2', opacityColor : '#d1dded'},
+		{color : '#ad1947', opacityColor : '#f0d4dc'}, 
+		{color : '#de071a', opacityColor : '#f9d0d4'}, 
+		{color : '#ef800a', opacityColor : '#fce7d1' },           
+		{color : '#b3a46b', opacityColor : '#f1eee3'}, 
+		{color : '#004c9d', opacityColor :  '#cfdded'},
+		{color : '#fee500', opacityColor :  '#ebe5ab'}
+	];
+	
+	for(var i=0; i<xfuSkinObject.length; i++){
+	
+		var spanEle = $("<span></span>");
+		spanEle.attr("id", i);
+		spanEle.attr("class", "xfuTheme-area");
+		spanEle.attr("title", "skinType : " + i + "\ncolor : " + xfuSkinObject[i].color + "\nopacityColor : " + xfuSkinObject[i].opacityColor);
+		spanEle.css({
+			"height" : "20px",
+			"display" : "inline-block",
+			"float" : "left",
+			"background" : xfuSkinObject[i].color,
+			"font-weight" : "bold",
+			"padding" : "5px",
+			"margin" : "0px 2px 2px 0px",
+			"cursor" : "pointer",
+			"color" : xfuSkinObject[i].opacityColor,
+			"line-height" : "20px"
+		});
+		spanEle.html("skinType : " + i);
+		
+		$("#colorArea").append(spanEle);
+	}
+	
+	// 마우스 오버 효과
+	$(".xfuTheme-area").hover(function(e){
+		
+		$(this).css("background", xfuSkinObject[Number(e.target.id)].opacityColor);
+		$(this).css("color", xfuSkinObject[Number(e.target.id)].color);
+	}, function(e){
+		
+		$(this).css("background", xfuSkinObject[Number(e.target.id)].color);
+		$(this).css("color", xfuSkinObject[Number(e.target.id)].opacityColor);
+	});
+	
+	// 클릭시 XFU 테마 적용
+	$(".xfuTheme-area").click(function(e){
+	
+		var obj = xfuOptionsObj;
+		obj["skinType"] = Number(e.target.id);
+		
+		$("#fileUpload").children().remove();
+		wFileUpload = new xFreeUploader(obj);
+	});
+
+	
+	// 드래그앤드롭 이미지 관련
+	var dragImgList = ["fileupload_1.png", "fileupload_2.png", "fileupload_3.png", "fileupload_4.png"];
+	
+	for(var i=0; i<dragImgList.length; i++){
+	
+		var dragImgUrl = xfuOptionsObj["basePath"] + "/img/v2/" + dragImgList[i];
+		var imgEle = $("<img/>");
+		imgEle.attr("id", i);
+		imgEle.attr("class", "xfuDrag-Img");
+		//imgEle.attr("title", dragImgUrl);
+		imgEle.css({
+			"width" : "40px",
+			"height" : "40px",
+			//"display" : "inline-block",
+			//"float" : "left",
+			"margin" : "0px 2px 2px 0px",
+			"cursor" : "pointer",
+			"background" : "url(" + dragImgUrl + ") 0% 0% / " + $("#drageImgSizeCmb").val() + " no-repeat"
+		});
+		
+		var imgSpanEle = $("<span></span>");
+		imgSpanEle.attr("title", "dropAreaImgUrl : " + dragImgUrl);
+		imgSpanEle.css({
+			"display" : "inline-block",
+			"width" : "40px",
+			"height" : "40px",
+			"padding" : "1px",
+			"margin" : "0 auto"
+		});
+		imgSpanEle.append(imgEle);
+		
+		$("#dragImgArea").append(imgSpanEle);
+	}
+	
+	$(".xfuDrag-Img").click(function(e){
+	
+		var obj = xfuOptionsObj;
+		obj["dropAreaImgUrl"] = xfuOptionsObj["basePath"] + "/img/v2/" + dragImgList[Number(e.target.id)];
+		
+		$("#fileUpload").children().remove();
+		wFileUpload = new xFreeUploader(obj);
+	});
+	
+	// 드래그앤드롭 이미지 사이즈 변경
+	$("#drageImgSizeCmb").change(function(e){
+	
+		var obj = xfuOptionsObj;
+		obj["dropAreaImgSize"] = e.target.value;
+		
+		$("#fileUpload").children().remove();
+		wFileUpload = new xFreeUploader(obj);
+	});
+	
+	// 상단 타이틀영역 숨기기 여부
+	$("#isShowTitleArea").change(function(e){
+	
+		var obj = xfuOptionsObj;
+		
+		if(e.target.value === "0"){
+			
+			obj["isHideTitleRow"] = true;
+		} else {
+		
+			obj["isHideTitleRow"] = false;
+		}
+		
+		$("#fileUpload").children().remove();
+		wFileUpload = new xFreeUploader(obj);
+	});
+	
+	// 우측 원형차트 보이기 여부
+	$("#isShowRightArea").change(function(e){
+	
+		var obj = xfuOptionsObj;
+		
+		if(e.target.value === "0"){
+			
+			obj["isPieChartArea"] = true;
+		} else {
+		
+			obj["isPieChartArea"] = false;
+		}
+		
+		$("#fileUpload").children().remove();
+		wFileUpload = new xFreeUploader(obj);
+	});
+	
+	
+	/*
+	// 커스텀버튼 클릭 이벤트 (customButtons 옵션 사용시 예제)
+	$("#addBtn").click(function () {
+		var obj = xfuOptionsObj;
+
+		var btnKeys = Object.keys(obj["customButtons"]);
+
+		if (btnKeys.indexOf($("#btnText").val()) > -1) {
+			alert("같은 버튼명이 존재합니다.");
+			return false;
+		}
+
+		var msg = $("#btnMsgText").val().trim();
+		obj["customButtons"][$("#btnText").val()] = 'fnTest1(\''+ msg +'\')';
+			
+
+		$("#fileUpload").children().remove();
+		wFileUpload = new xFreeUploader(obj);
+	});
+	*/
+	
+	var _customBtnIdx = 1;
+	
+	// 커스텀버튼 클릭 이벤트 (customButtonsKeyName / customButtonsKeyValue 옵션 사용시 예제)
+	$("#addBtn").click(function () {
+		var obj = xfuOptionsObj;
+
+		var btnKeys = obj["customButtonsKeyName"];
+		
+		if($("#btnText").val().trim() === ""){
+		
+			alert("버튼명을 입력하세요.");
+			return false;
+		}
+
+		if (btnKeys.indexOf($("#btnText").val()) > -1) {
+		
+			alert("같은 버튼명이 존재합니다.");
+			return false;
+		}
+
+		var msg = $("#btnMsgText").val().trim();
+		obj["customButtonsKeyName"].push($("#btnText").val().trim());
+		obj["customButtonsKeyValue"].push('fnTest1(\''+ msg +'\')');
+			
+
+		$("#fileUpload").children().remove();
+		wFileUpload = new xFreeUploader(obj);
+		
+		// 편의상 [버튼명]과 [표현메시지내용]을 업데이트 처리
+		if($("#btnText").val().trim().indexOf("커스텀버튼") > -1 && $("#btnMsgText").val().trim().indexOf("커스텀버튼") > -1){
+		
+			_customBtnIdx += 1;
+			
+			$("#btnText").val("커스텀버튼" + _customBtnIdx);
+			$("#btnMsgText").val("커스텀버튼" + _customBtnIdx + "추가")
+		}
+	});
+	
+	
+	$("#btnText, #btnMsgText").change(function(e){
+	
+		// 입력을 제한 할 특수문자의 정규식
+		//var replaceId  = /[~!@\#$%^&*\()\-=+_'\;<>\/.\`:\"\\,\[\]?|{}]/gi;
+		
+		// 특수문자 대부분 허용하되 외따옴표 쌍따옴표만 치환 처리
+		var replaceId  = /['"]/gi;
+		
+		var x = $(this).val();
+		
+		if (x.length > 0) {
+		
+			if (x.match(replaceId)) {
+			
+			   x = x.replace(replaceId, "");
+			}
+			
+			$(this).val(x);
+		}
+	});
+}
+
+function fnTest1(msg) {
+	//$("#fileUpload").after("<div>" + msg + "</div>");
+	msg += "\n";
+	msgTest += msg;
+	$("#result").text(msgTest);
+	//$("#result").scrollTop($(document).height());
+	document.getElementById("result").scrollTop = document.getElementById("result").scrollHeight;
+	
+	alert(msg);
+}
+
+</script>
+<style type="text/css">
+
+</style>
+</head>
+
+<body onload="init()">
+    <div class="title">테마 UI 변경</div>
+	
+	<div class="comment">
+        <ul>
+			<li><b>설명</b></li>
+			<ul style="list-style-type: circle;">
+				<li>X-Free Uploader는 아래 예시와 같이 레이아웃 관련 스타일의 변경이 가능합니다.</li>
+			</ul>
+		</ul>
+    </div>
+	
+	<div class="caption-pnl">▶ 파일 업로드</div>
+	<div class="xFreeUploader-pnl" id="fileUpload"></div>
+	
+	<div class="caption-pnl">▷ 테마 변경</div>
+	<div class="comment">
+        <ul>
+			<li><b>설명</b></li>
+			<ul style="list-style-type: circle;">
+				<li>X-Free Uploader의 자바스크립트 선언 부분의 옵션 정보(skinType)에 따라 정의된 색상 테마를 적용할 수 있습니다.</li>
+			</ul>
+		</ul>
+    </div>
+	<div class="table-pnl">
+		<table border="1" cellpadding="0" cellspacing="0">		
+			<colgroup>
+				<col width="100%"/>
+			</colgroup>
+			<tbody>
+				<tr>
+					<td>
+						<div id="colorArea"></div>
+					</td>
+				</tr>
+		</table>
+	</div>
+	
+	<div class="caption-pnl">▷ 관련 컨트롤</div>
+	<div class="colgroup-pnl">
+		<span class="colgroup-left-pnl">
+			<div class="caption-pnl">▷ 영역 편집</div>	
+			<div class="table-pnl">
+				<table border="1" cellpadding="0" cellspacing="0">		
+					<colgroup>
+						<col width="100%"/>
+					</colgroup>
+					<tbody>
+						<tr>
+							<th><p>드래그앤드롭 이미지 아이콘 변경</p></th>
+						</tr>
+						<tr>
+							<td>
+								<p>
+									<div id="dragImgArea"></div>
+								</p>
+								<p>
+									원하는 드래그앤드롭 이미지로 변경이 가능합니다.
+								</p>
+							</td>
+						</tr>
+						<tr>
+							<th><p>드래그앤드롭 이미지 아이콘 사이즈 설정</p></th>					
+						</tr>
+						<tr>
+							<td>
+								<p>
+									<select id="drageImgSizeCmb">
+										<option value="10px">10px</option>
+										<option value="20px">20px</option>
+										<option value="40px" selected>40px</option>
+										<option value="60px">60px</option>
+										<option value="80px">80px</option>
+										<option value="100px">100px</option>
+									</select>
+								</p>
+								<p>
+									드래그앤드롭 이미지의 사이즈 변경이 가능합니다.
+								</p>
+							</td>
+						</tr>				
+						<tr>
+							<th><p>상단 타이틀 영역 숨기기 여부</p></th>
+						</tr>
+						<tr>
+							<td>
+								<p>
+									<select id="isShowTitleArea">
+										<option value="0">true</option>
+										<option value="1" selected>false</option>
+									</select>
+								</p>
+								<p>
+									X-Free Uploader의 상단 영역을 숨기거나 보이게 처리할 수 있습니다.
+								</p>
+							</td>
+						</tr>				
+						<tr>	
+							<th><p>우측 원형차트 보이기 여부</p></th>
+						</tr>
+						<tr>	
+							<td>
+								<p>
+									<select id="isShowRightArea">
+										<option value="0" selected>true</option>
+										<option value="1">false</option>
+									</select>
+								</p>
+								<p>
+									X-Free Uploader의 우측 원형차트 영역을 숨기거나 보이게 처리할 수 있습니다.
+								</p>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</span>
+		<span class="colgroup-right-pnl">
+			<div class="caption-pnl">▷ 커스텀 버튼 추가</div>	
+			<div class="table-pnl">
+				<table style="width : 100%;">
+					<colgroup>
+						<col width="100%"/>
+					</colgroup>
+					<tbody>
+						<tr>
+							<th style="text-align : left; padding-left: 5px;">
+								<p>1) 버튼명 및 표현메시지내용 입력</p>
+							</th>
+						</tr>
+						<tr>
+							<td style="padding: 5px;">
+								<p>
+									<div>
+										<label style="width: 100px; display: block; float: left;">버튼명 : </label><input type="text" id="btnText" size="10" value="커스텀버튼1" />
+									</div>
+									<div>
+										<label style="width: 100px; display: block; float: left;">표현메시지내용 : </label><input type="text" id="btnMsgText" size="18" value="커스텀버튼1추가" />
+									</div>
+								</p>
+								<p>
+									X-Free Uploader 내부 영역에 추가할 커스텀버튼의 정보를 입력합니다.
+								</p>
+							</td>
+						</tr>
+						<tr>	
+							<th style="text-align : left; padding-left: 5px;">
+								<p>2) 버튼추가 실행</p>
+							</th>
+						</tr>
+						<tr>
+							<td>
+								<p class="example-button-pnl">
+									<button type="button" id="addBtn">버튼추가</button>
+								</p>
+								<p>
+									해당 버튼을 누르면 X-Free Uploader 내부 영역에 커스텀버튼이 추가됩니다.
+								</p>
+							</td>
+						</tr>
+						<tr>	
+							<th style="text-align : left; padding-left: 5px;">
+								<p>3) 버튼클릭이벤트 실행결과</p>
+							</th>
+						</tr>
+						<tr>
+							<td>
+								<p>
+									<textarea id="result" readonly="readonly" style="width: 90%; height: 60px;"></textarea>
+								</p>
+								<p>
+									추가된 커스텀버튼을 클릭시 해당영역에 메시지가 출력되도록 하여 해당 커스텀버튼의 흐름을 파악할 수 있습니다.
+								</p>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</span>
+	</div>
+	
+</body>
+</html>
