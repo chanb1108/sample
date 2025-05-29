@@ -1,0 +1,409 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="-1" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1, user-scalable=no"/>
+<title>게시판 뷰어</title>
+<link rel="stylesheet" href="./css/bbs_common.css" type="text/css" media="screen"/>
+<link rel="stylesheet" href="../images/ex_v2.css" type="text/css" media="screen"/>
+<script type="text/javascript" src="./js/jquery-1.8.1.min.js"></script>
+
+<!-- 예제샘플용 공통함수 -->
+<script type="text/javascript" src="../xfu_ex_common.js"></script>
+
+<!-- 게시판 공통함수 -->
+<script type="text/javascript" src="./js/bbs_common.js"></script>
+
+<!-- X-Free Uploader -->
+<script type="text/javascript" src="../../../js/xFreeUploader.js"></script>
+<script type="text/javascript">
+/*
+ * [게시판 뷰어화면]
+ * 해당 게시판 예제는 DB를 사용하지 않고 dataobj.js에 json데이터를 텍스트로 저장하여 활용한 예제로 
+ * XFU를 연동한 게시판의 가장 기본적인 CRUD의 흐름을 개발자분들이 이해하기 쉽게 샘플로 제작한 페이지이므로 
+ * 일부분 정도만 참고하시면 됩니다.
+ */
+
+// XFU 다운로드모드 전역변수
+var wFileDownload;
+
+// 게시물 데이터 전역변수
+var dataObj = [];
+
+// XFU DocID : 업로드할때 유니크한 파일키 정보
+var xfuDocID_data = "";
+
+var strServerType = "php";
+
+var xfuBasePath = "/xFreeUploader";
+
+
+// DOM OnLoad
+$(document).ready(function(){
+
+	// 서버타입 자동세팅(/index.html로 접근시에만 정상적으로 동작)
+	if(parent.document.getElementById("serverType")){
+	
+		strServerType = parent.document.getElementById("serverType").value;		
+	}
+	
+	var origin = document.location.origin;
+	
+	if(origin) {
+	
+		xfuBasePath = origin + xfuBasePath;
+	} 
+	else {
+	
+		xfuBasePath = document.location.protocol + '//' + document.location.host + xfuBasePath;
+	}
+	//var xfuFilePath = "/xFreeUploader/examples/v2/bbs/uploads_bbs";
+	var xfuFilePath = xfuBasePath + "/examples/v2/bbs/uploads_bbs";
+	
+	// 태그프리 홈페이지 분기처리
+	if(xfu_ex_common.checkDomain()){
+		
+		xfuBasePath = "/xfu_test/v2/xFreeUploader";
+		
+		if(origin) {
+	
+			xfuBasePath = origin + xfuBasePath;
+		} 
+		else {
+		
+			xfuBasePath = document.location.protocol + '//' + document.location.host + xfuBasePath;
+		}
+		//xfuFilePath = "/xfu_test/v2/xFreeUploader/examples/v2/bbs/uploads_bbs";
+		xfuFilePath = xfuBasePath + "/examples/v2/bbs/uploads_bbs";
+	}
+	
+	// X-Free Uploader 선언(다운로드모드)
+	wFileDownload = new xFreeUploader({
+		render: "fileDownload",
+		basePath : xfuBasePath,
+		selectMode: "download",
+		filePath: xfuFilePath,
+		
+		// serverType: "php",
+		//serverType: bbs_common.serverType,
+		serverType: strServerType,
+		
+		// 첨부리스트 높이
+		bodyHeight: 200,				
+
+		// XFU 로드된 후 발생 이벤트
+		onLoad: function (data) {
+			
+			init_xfuLoad();
+		},
+		// 다운로드 실행 후 submit 발생 전
+		onBeforeSubmit: function (data) {
+			console.log("다운로드 받기전");
+			console.log(data);
+		},
+		// 다운로드 정상 콜백
+		onSuccessCallback: function () {
+			console.log("파일다운로드 성공");
+		},
+		// 다운로드 비정상 콜백
+		onFailCallback: function (error) {
+			console.log("파일다운로드 실패");
+			console.log(error);
+		},
+		// [항목제거] 버튼 클릭 이벤트핸들러
+		onDeleteFile: function (data) {
+			console.log("항목제거");
+			console.log(data);
+		},
+		// [항목전체제거] 버튼 클릭 이벤트핸들러
+		onDeleteAllFile: function (data) {
+			console.log("항목전체제거");
+			console.log(data);
+			
+			deleteData();
+		},
+		// XFU에서 서버파일삭제를 하기 위해선 아래 이벤트 함수 안 내용과 같이 true를 반환시켜야 한다.
+		onBeforeDeleteFile : function(){
+		
+			return true;
+		}
+	});
+});
+
+// XFU onLoad되고나서의 시점
+function init_xfuLoad(){
+
+	// 해당 게시물의 순번 정보 반환받기
+	var no = Number(bbs_common.getParameter("no"));
+	
+	// 게시물 데이터 조회
+	bbs_common.loadData("./uploads_bbs/dataobj.js", function(data){
+	
+		if(typeof(data) !== "undefined"){
+		
+			for(var i=0; i<data.length; i++){
+			
+				// 선택된 순번
+				if(data[i].no === no){
+				
+					// 해당 페이지에 데이터 세팅하기
+					setDataToBoardView(data[i]);
+				}
+			}
+		} else {
+		
+			data = [];
+		}
+		
+		dataObj = data;
+	});
+	
+	// 해당 페이지 요소의 이벤트 핸들러 등록
+	eventHandler();
+}
+
+// 해당 페이지 요소의 이벤트 핸들러 등록
+function eventHandler(){
+
+	// [목록] 버튼 클릭
+	$(".footer #btnList").click(function(e){
+	
+		location.href = "./list.html";
+		
+		e.preventDefault(e);
+		e.stopPropagation(e);
+	});
+	
+	// [수정] 버튼 클릭
+	$(".footer #btnEdit").click(function(e){
+	
+		// 해당 순번 정보를 가지고 게시물 편집 화면으로 이동
+		var id = bbs_common.getParameter("no");
+		
+		location.href = "./write.html?no=" + id;
+		
+		e.preventDefault(e);
+		e.stopPropagation(e);
+	});
+	
+	// [삭제] 버튼 클릭
+	$(".footer #btnDelete").click(function(e){
+	
+		// XFU에 첨부된 항목이 1건도 없을때 처리
+		if(wFileDownload.getFileList(false).length === 0){
+		
+			deleteData();
+		} 
+		// XFU에 첨부된 항목이 1건 이상 존재할 경우 파일삭제 진행 -> XFU의 onDeleteAllFile 이벤트에서 후속 조치
+		else {
+		
+			wFileDownload.fileServerAllDelete();
+		}
+		
+		e.preventDefault(e);
+		e.stopPropagation(e);
+	});
+}
+
+// 해당 페이지에 선택된 순번의 데이터 정보들을 세팅합니다.
+function setDataToBoardView(data){
+
+	// 카운터 증가 처리
+	var cnt = ++data.count;
+
+	// 제목 세팅
+	$(".header #titleArea p").html(data.title);
+	
+	// 조회수 세팅
+	$(".header #count").html(cnt);
+	
+	// 작성자 세팅
+	$(".header #writer").html(data.writer);
+	
+	// 작성날짜 세팅
+	$(".header #dates").html(bbs_common.maskDate(data.writeDate));
+	
+	// 내용 세팅
+	$(".viewer-pnl #view").html(data.contents);
+	
+	// 업로드파일목록 세팅
+	for(var i=0; i<data.uploadData.length; i++){
+	
+		// 특수문자 치환 처리
+		var svrfileName = bbs_common.replaceSpecialChar(data.uploadData[i].fileName, true);
+		
+		// XFU의 서버파일추가 - 서버에 존재하는 파일정보 행 추가 처리
+		wFileDownload.fileAttachAddTxt(svrfileName, data.uploadData[i].savePath, data.uploadData[i].fileSize, data.uploadData[i].fileDate);
+	}
+	
+	// 조회수 자동 증가처리
+	plusCount();
+}
+
+// 해당 게시물 삭제 처리
+function deleteData(){
+
+	var no = Number(bbs_common.getParameter("no"));
+	
+	bbs_common.loadData("./uploads_bbs/dataobj.js", function(data){
+	
+		if(typeof(data) !== "undefined"){
+		
+			for(var i=0; i<data.length; i++){
+			
+				if(data[i].no === no){
+				
+					// 게시물 데이터 배열에 해당 순번의 데이터 삭제
+					dataObj.splice(i, 1);
+					
+					// 위의 삭제되어 변경된 게시물 데이터를 가지고 저장프로세스 호출
+					serverDeleteData(dataObj);
+					break;
+					//i--;
+				}
+			}
+		}
+		
+		// 서버 빈폴더 자동 삭제 처리
+		wFileDownload.emptyFolderDelete(wFileDownload.options.filePath);
+	});
+}
+
+// 삭제되어 변경된 게시물 데이터를 가지고 저장처리
+function serverDeleteData(jsonData){
+	
+	var saveServerFileUrl = "./svr/content_save." +strServerType;
+	
+	bbs_common.loadData(saveServerFileUrl, function(data){
+	
+		console.log(data);
+		alert("데이터가 삭제되었습니다.");
+		location.href = "./list.html";
+		
+	}, jsonData);
+}
+
+// 조회수 자동 증가 처리
+function plusCount(){
+
+	var no = Number(bbs_common.getParameter("no"));
+	
+	bbs_common.loadData("./uploads_bbs/dataobj.js", function(data){
+	
+		if(typeof(data) !== "undefined"){
+		
+			dataObj = data;
+		
+			for(var i=0; i<dataObj.length; i++){
+			
+				if(dataObj[i].no === no){
+				
+					dataObj[i].count = Number($(".header #count").html());
+				}
+			}
+		} else {
+		
+			dataObj = [];
+		}
+		
+		// 조회수 정보가 변경된 데이터를 가지고 저장프로세스 호출
+		serverCountSaveData(dataObj);
+	});
+}
+
+// 변경된 데이터(조회수 변경)를 가지고 저장처리
+function serverCountSaveData(jsonData){
+
+	var saveServerFileUrl = "./svr/content_save." +strServerType;
+	
+	bbs_common.loadData(saveServerFileUrl, function(data){
+		
+	}, jsonData);
+}
+
+</script>
+<style type="text/css">
+.viewer-pnl{
+	width : 100%;
+	height: 280px;
+	overflow:auto;	
+	border : 1px solid rgb(173, 173, 173);
+    display: inline-block;
+}
+#view{
+	margin : 8px;
+}
+
+.header #titleArea{
+	line-height: 55px;
+    border-top: 1px solid #cdcdcd;
+    text-indent: 15px;
+    color: #333;
+    font-size: 16px;
+}
+.header #titleArea p{
+	background-color: #f8f8f8;
+    border-bottom: 1px solid #d3d3d3;
+    font-weight: 700;
+	margin : 0px;
+	height: 55px;
+}
+.header ul{
+	font-size: 13px;
+    height: 42px;
+    line-height: 43px;
+    border-bottom: 1px solid #ebebeb;
+    text-align: right;
+	display : inline-table;
+	padding: 0px;
+    width: 100%;
+}
+.header li{
+	display: inline-block;
+    padding-right: 10px;
+    color: #333;
+    text-indent: 30px;
+}
+</style>
+</head>
+
+<body>
+	<div class="title">게시판 샘플(No DB)</div>
+	<div class="comment">
+        <ul>
+			<li><b>설명</b></li>
+			<ul style="list-style-type: circle;">
+				<li>해당 게시판 예제는 <b>DB를 사용하지 않고 dataobj.js에 json데이터를 텍스트로 저장</b>하여 활용한 예제입니다.</li>
+				<li><b>X-Free Uploader를 연동한 게시판의 가장 기본적인 CRUD의 흐름을 개발자분들이 이해하기 쉽게 샘플로 제작한 페이지</b>이므로 일부분 정도만 참고하시면 됩니다.</li>
+			</ul>
+		</ul>
+    </div>
+	<div class="header">
+		<div id="titleArea">
+			<p></p>
+		</div>
+		<div>
+			<ul>
+				<li>조회수 <span id="count"></span></li>
+				<li>작성자 <span id="writer"></span></li>
+				<li><span id="dates"></span></li>
+			</ul>
+		</div>
+	</div>
+	<div class="content">
+		<div class="viewer-pnl">
+			<div id="view"></div>
+		</div>
+		<div id="fileDownload" class="xFreeUploader-pnl"></div>
+	</div>
+	<div class="footer">
+		<button type="button" id="btnList">목록</button>
+		<button type="button" id="btnEdit">수정</button>
+		<button type="button" id="btnDelete">삭제</button>
+	</div>
+</body>
+</html>

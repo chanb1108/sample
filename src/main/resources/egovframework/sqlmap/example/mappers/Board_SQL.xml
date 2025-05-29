@@ -9,6 +9,9 @@
 		<result property="bbRegDate" column="bb_reg_date"/>
 		<result property="bbHit" column="bb_hit"/>
 		<result property="bbOpen" column="bb_open"/>
+		<result property="bbNotice" column="bb_notice"/>
+		<result property="bbOrIdx" column="bb_or_idx"/>
+		<result property="bbContent" column="bb_content"/>
 	</resultMap>
 	
 	<resultMap id="org" type="egovframework.example.sample.service.OrgVO">
@@ -23,6 +26,24 @@
 		<result property="orGb" column="or_gb"/>
 		<result property="orSearchGroup" column="or_search_group"/>
 	</resultMap>
+	
+	<resultMap id="file" type="egovframework.example.sample.service.FileVO">
+		<result property="bfIdx" column="bf_idx"/>
+		<result property="bfBbsid" column="bf_bbsid"/>
+		<result property="bfBbIdx" column="bf_bb_idx"/>
+		<result property="bfSrc" column="bf_src"/>
+		<result property="bfOrgName" column="bf_org_name"/>
+		<result property="bfName" column="bf_name"/>
+		<result property="bfExt" column="bf_ext"/>
+		<result property="bfSize" column="bf_size"/>
+		<result property="bfSeq" column="bf_seq"/>
+		<result property="bfRegDate" column="bf_reg_date"/>
+		<result property="bfRegId" column="bf_reg_id"/>
+		<result property="bfRegIp" column="bf_reg_ip"/>
+		<result property="bfModDate" column="bf_mod_date"/>
+		<result property="bfModId" column="bf_mod_id"/>
+		<result property="bfModIp" column="bf_mod_ip"/>
+	</resultMap>
 
 	<select id="selectBoardList" parameterType="boardVO" resultMap="board">
 		SELECT b.bb_idx, b.bb_title, o.or_name, b.bb_reg_date, b.bb_hit, b.bb_open
@@ -32,10 +53,56 @@
 		WHERE o.or_name IS NOT NULL
 	</select>
 	
+	<select id="selectSchBoardList" parameterType="boardVO" resultMap="board">
+		SELECT b.bb_idx, b.bb_title, o.or_name, b.bb_reg_date, b.bb_hit, b.bb_open
+		FROM sianadb.market.bbs b
+		LEFT JOIN sianadb.market.org o
+			ON b.bb_or_idx = o.or_idx
+		WHERE 1=1
+		<if test="bbOrIdx != '' and bbOrIdx != null">
+			and bb_or_idx = #{bbOrIdx}
+		</if>
+		<choose>
+			<when test="schDate == 'bbRegDate' and strDate != '' and strDate != null">
+				and bb_reg_date between #{strDate}::timestamp 
+				<choose>
+					<when test="endDate != '' and endDate != null">
+						and #{endDate}::timestamp
+					</when>
+					<otherwise>
+						and now()
+					</otherwise>
+				</choose>
+			</when>
+			<when test="schDate == 'bbModDate' and strDate != '' and strDate != null">
+				and bb_mod_date between #{strDate}::timestamp
+				<choose>
+					<when test="endDate != '' and endDate != null">
+						and #{endDate}::timestamp
+					</when>
+					<otherwise>
+						and now()
+					</otherwise>
+				</choose>
+			</when>
+		</choose>
+		<if test="bbTitle != '' and bbTitle != null">
+			and bb_title like CONCAT('%', #{bbTitle}, '%')		
+		</if>
+	</select>
+	
 	<select id="selectOrgList" parameterType="orgVO" resultMap="org">
 		SELECT O.OR_IDX, O.OR_ID, O.OR_NAME, O.OR_LEVEL, O.OR_CONTEST_STATUS, O.OR_RND_STATUS, O.OR_RND_STATUS, O.OR_IP_INTRO, O.OR_SEQ, O.OR_GB, O.OR_SEARCH_GROUP
 		FROM SIANADB.MARKET.ORG O
 		ORDER BY OR_SEQ
+	</select>
+	
+	<select id="selectBoardDetail" parameterType="boardVO" resultMap="board">
+		SELECT B.BB_IDX, B.BB_NOTICE, B.BB_OR_IDX, B.BB_TITLE, B.BB_CONTENT, B.BB_OPEN, B.BB_REG_DATE, B.BB_HIT
+		FROM SIANADB.MARKET.BBS B
+		LEFT JOIN SIANADB.MARKET.ORG O
+			ON B.BB_OR_IDX = O.OR_IDX
+		WHERE B.BB_IDX = #{bbIdx}
 	</select>
 	
 	<insert id="insertBoard" parameterType="boardVO" useGeneratedKeys="true" keyProperty="bbIdx">
@@ -75,5 +142,49 @@
 			#{bbRegIp}
 		)
 	</insert>
+	
+	<insert id="insertFileList" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="bfIdx">
+		INSERT INTO SIANADB.MARKET.BBS_FILE (
+			BF_BBSID, 
+			BF_BB_IDX, 
+			BF_SRC, 
+			BF_ORG_NAME, 
+			BF_NAME,
+			BF_EXT, 
+			BF_SIZE,
+			BF_SEQ, 
+			BF_REG_DATE, 
+			BF_REG_ID,
+			BF_REG_IP
+		) VALUES
+		<foreach collection="list" item="file" separator=",">
+			(
+				#{file.bfBbsid}, 
+				#{file.bfBbIdx}, 
+				#{file.bfSrc}, 
+				#{file.bfOrgName}, 
+				#{file.bfName},
+				#{file.bfExt}, 
+				#{file.bfSize}, 
+				#{file.bfSeq}, 
+				now(), 
+				#{file.bfRegId},
+				#{file.bfRegIp}
+			)
+		</foreach>
+	</insert>
+	
+	<update id="modifyBoard" parameterType="boardVO">
+		UPDATE SIANADB.MARKET.BBS
+		SET
+			BB_MOD_DATE = NOW()
+			, BB_MOD_ID = #{bbModId}
+			, BB_MOD_IP = #{bbModIp}
+			, BB_NOTICE = #{bbNotice}
+			, BB_OR_IDX = #{bbOrIdx}
+			, BB_TITLE = #{bbTitle}
+			, BB_OPEN = #{bbOpen}
+		WHERE BB_IDX = #{bbIdx}
+	</update>
 
 </mapper>

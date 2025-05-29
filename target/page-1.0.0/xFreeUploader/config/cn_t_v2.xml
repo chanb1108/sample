@@ -1,0 +1,119 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<xFreeUploader>
+	
+	<!-- 기존 v1에서 사용중이었던 내용 -->
+	<xMsg_dropArea>請拖動或雙擊文件以在此處上傳。</xMsg_dropArea>
+	<xMsg_readyUpload>準備上傳。</xMsg_readyUpload>
+	<xMsg_iframe>此瀏覽器不支持iframe。</xMsg_iframe>
+	<xMsg_fileAdd>添加文件</xMsg_fileAdd>
+	<xMsg_fileDelete>刪除項目</xMsg_fileDelete>
+	<xMsg_fileAllDelete>刪除整個條目</xMsg_fileAllDelete>
+	<xMsg_fileSubmit>文件傳輸</xMsg_fileSubmit>
+	<xMsg_max>截至</xMsg_max>
+	<xMsg_count>數數</xMsg_count>
+	<xMsg_limit>限制</xMsg_limit>
+	<xMsg_submitTimeRemain>傳輸速率（剩餘時間）</xMsg_submitTimeRemain>	
+	<xMsg_added>額外</xMsg_added>
+	<xMsg_viewed>搜索查詢</xMsg_viewed>
+	<xMsg_fileName>文件名稱</xMsg_fileName>	
+	<xMsg_uploadState>上傳狀態(%)</xMsg_uploadState>	
+	<xMsg_uploadSize>文件大小</xMsg_uploadSize>	
+	<xMsg_fileAddError>添加文件附件時出錯!</xMsg_fileAddError>	
+	<xMsg_fileDelError>刪除附件時出錯!</xMsg_fileDelError>	
+	<xMsg_fileDataError>文件附件數據錯誤!</xMsg_fileDataError>	
+	<xMsg_attachNoAdd>沒有添加附件。 請選擇附件。</xMsg_attachNoAdd>	
+	<xMsg_directoryError>路徑輸入不正確。</xMsg_directoryError>	
+	<xMsg_overlapFile>該文件被添加到文件附件列表中。</xMsg_overlapFile>	
+	<xMsg_maxCountLimit>已超過文件附件的最大數量 : </xMsg_maxCountLimit>	
+	<xMsg_maxSizeLimit>文件附件超過最大大小。|文件名 : </xMsg_maxSizeLimit>	
+	<xMsg_notExt>文件是無法附加的擴展名。</xMsg_notExt>	
+	<xMsg_serverError>與服務器通信時出現問題。</xMsg_serverError>	
+	<xMsg_allDelete>你確定要刪除所有條目嗎？</xMsg_allDelete>
+	<xMsg_uploadComplete>您的上傳已完成。</xMsg_uploadComplete>
+	<xMsg_stateMsgAddFile>已添加項目。</xMsg_stateMsgAddFile>
+	<xMsg_stateMsgSelectedFileDelete>所選項目已被刪除。</xMsg_stateMsgSelectedFileDelete>
+	<xMsg_stateMsgSelectedFilesDelete>所選項目已被刪除。</xMsg_stateMsgSelectedFilesDelete>
+	<xMsg_stateMsgAllFilesDelete>所有項目已被刪除。</xMsg_stateMsgAllFilesDelete>
+	<xMsg_saveDate>保存日期</xMsg_saveDate>
+	<xMsg_savePath>存儲路徑</xMsg_savePath>
+	<xMsg_fileType>文件類型</xMsg_fileType>
+	<xMsg_fileSearch>查看文件</xMsg_fileSearch>
+	<xMsg_selectedDownload>選擇下載</xMsg_selectedDownload>
+	<xMsg_AllDownload>完整下載</xMsg_AllDownload>
+	<xMsg_AllClear>初始化列表</xMsg_AllClear>
+	<xMsg_Open>熱</xMsg_Open>
+	<xMsg_NotFoundAttachFileList>附件列表不存在。</xMsg_NotFoundAttachFileList>
+	<xMsg_NotSelectedDownloadFile>請選擇要下載的項目。</xMsg_NotSelectedDownloadFile>
+	<xMsg_stateMsgSearchFile>查看了 個項目。</xMsg_stateMsgSearchFile>
+	<xMsg_stateMsgSelectedFiles>已選擇 個項目。</xMsg_stateMsgSelectedFiles>
+	<xMsg_allDownload>你想下載整個項目嗎？</xMsg_allDownload>
+	<xMsg_NotSelectedDeleteFile>請選擇要刪除的項目。</xMsg_NotSelectedDeleteFile>
+	<xMsg_XssFileAlert>XSS攻擊可疑文件。</xMsg_XssFileAlert>
+	<xMsg_selectedFileCheck>檢查文件選擇</xMsg_selectedFileCheck>
+	<xMsg_addFileAllCheck>選擇所有附加文件</xMsg_addFileAllCheck>
+	
+	<!-- v2에서 새로 추가된 내용 -->
+	<xMsg_isValidIECheck>僅適用於 Internet Explorer 10 或更高版本。</xMsg_isValidIECheck>
+	<xMsg_fileAdd>添加文件</xMsg_fileAdd>
+	<xMsg_fileDelete2>刪除選擇</xMsg_fileDelete2>
+	<xMsg_versionInfo>產品信息</xMsg_versionInfo>
+	<xMsg_uploadLimitedFileTitle>正在使用的文件大小</xMsg_uploadLimitedFileTitle>
+	<xMsg_fileUsageCapacity>用法</xMsg_fileUsageCapacity>
+	<xMsg_fileServingCapacity>服務</xMsg_fileServingCapacity>
+	<xMsg_selectedDownload2>下載</xMsg_selectedDownload2>
+	<xMsg_readyDownload>準備下載。</xMsg_readyDownload>	
+	<xMsg_attachNoAdd2>沒有找到附件。</xMsg_attachNoAdd2>
+	<xMsg_continueFileQuestion>%d 文件已部分傳輸。|是否繼續傳輸文件？</xMsg_continueFileQuestion>
+	<xMsg_fileTransferStop>傳輸中止。</xMsg_fileTransferStop>
+	<xMsg_continueFileDownQuestion>%d 文件可以連續下載。|是否繼續下載文件？</xMsg_continueFileDownQuestion>
+	<xMsg_makingDownloadFile>在裡面創建下載文件</xMsg_makingDownloadFile>
+	<xMsg_dontPageMove>如果在操作過程中移動頁面，將無法正常進行文件下載。</xMsg_dontPageMove>
+	<xMsg_onlyoneMoveFile>只能移動一個文件。</xMsg_onlyoneMoveFile>
+	
+	<!-- v2 제품 정보 다이얼로그 -->
+	<xMsg_productInformation>產品信息</xMsg_productInformation>
+	<xMsg_licenseInfo>本產品已註冊給以下用戶：</xMsg_licenseInfo>
+	<xMsg_companyName>公司名</xMsg_companyName>
+	<xMsg_licenseType>執照</xMsg_licenseType>
+	<xMsg_devGuide>開發者指南</xMsg_devGuide>
+	<xMsg_userGuide>用戶指南</xMsg_userGuide>
+	
+	<!-- v2 파일전송창 다이얼로그 -->
+	<xMsg_transferFile>傳輸文件</xMsg_transferFile>
+	<xMsg_transmissionCapacity>傳輸容量</xMsg_transmissionCapacity>
+	<xMsg_baudRate>波特率</xMsg_baudRate>
+	<xMsg_timeRemaining>剩餘時間</xMsg_timeRemaining>
+	<xMsg_detailData>細節</xMsg_detailData>
+	<xMsg_simplyData>簡單地</xMsg_simplyData>
+	<xMsg_abort>暫停</xMsg_abort>
+	<xMsg_restart>重新開始</xMsg_restart>
+	
+	<!-- v2 파일정보창 다이얼로그 -->
+	<xMsg_fileInformation>檔案資料</xMsg_fileInformation>
+	<xMsg_fileName2>文件名</xMsg_fileName2>
+	<xMsg_uploadSize2>文件大小</xMsg_uploadSize2>
+	<xMsg_fileFormat>文件格式</xMsg_fileFormat>
+	<xMsg_fileCreationDate>文件創建日期</xMsg_fileCreationDate>
+	<xMsg_filePath>文件位置</xMsg_filePath>
+	
+	<!-- v2 업로드 제한설정 정보 팝업 창 다이얼로그 -->
+	<xMsg_aboutUploadLimitSetting>關於上傳限制設置</xMsg_aboutUploadLimitSetting>
+	<xMsg_numberOfUploads>上傳次數</xMsg_numberOfUploads>
+	<xMsg_uploadableCapacitySingle>可上傳的單個文件容量</xMsg_uploadableCapacitySingle>
+	<xMsg_uploadableCapacity>可上傳的總文件容量</xMsg_uploadableCapacity>
+	<xMsg_count2>數數</xMsg_count2>
+	
+	<!-- v2 XFU의 마우스 우측 컨텍스트 메뉴 -->
+	<xMsg_selectedImgViewer>預覽所選圖像</xMsg_selectedImgViewer>
+	
+	<!-- v2 이미지 미리보기 팝업 창 다이얼로그 -->
+	<xMsg_openImage>打開原始圖像</xMsg_openImage>
+	<xMsg_openImageSizeOver>無法預覽，因為本地圖像的尺寸很大。</xMsg_openImageSizeOver>
+	<xMsg_openImageSizeOverAlertMsg>大容量圖像被 Open Original Image 替換。</xMsg_openImageSizeOverAlertMsg>
+	<xMsg_rotateLeft>左轉</xMsg_rotateLeft>
+	<xMsg_rotateRight>右轉</xMsg_rotateRight>
+	<xMsg_scaleX>左右顛倒</xMsg_scaleX>
+	<xMsg_scaleY>倒掛</xMsg_scaleY>
+	
+</xFreeUploader>

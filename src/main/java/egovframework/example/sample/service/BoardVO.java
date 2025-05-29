@@ -1,7 +1,10 @@
 package egovframework.example.sample.service;
 
 import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.Map;
 
 public class BoardVO {
 	
@@ -317,9 +320,41 @@ public class BoardVO {
 		sdfBbModDate = this.setDateFormat(this.bbModDate);
 		return sdfBbModDate;
 	}
-	
+
 	public String setDateFormat (Timestamp date) {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		return sdf.format(date);
+	}
+	
+	private String schDate;
+	private String strDate;
+	private String endDate;
+	
+	public String getSchDate() {
+		return schDate;
+	}
+	public void setSchDate(String schDate) {
+		this.schDate = schDate;
+	}
+	public String getStrDate() {
+		return strDate;
+	}
+	public void setStrDate(String strDate) {
+		this.strDate = strDate;
+	}
+	public String getEndDate() {
+		return endDate;
+	}
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
+	}
+	
+	public List<Map<String, String>> bbsFile;
+	
+	public List<Map<String, String>> getBbsFile() {
+		return bbsFile;
+	}
+	public void setBbsFile(List<Map<String, String>> bbsFile) {
+		this.bbsFile = bbsFile;
 	}
 }

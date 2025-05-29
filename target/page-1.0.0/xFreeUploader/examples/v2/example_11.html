@@ -1,0 +1,310 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="-1" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1, user-scalable=no"/>
+<title>파일 이어서 받기</title>
+<link rel="stylesheet" href="./images/ex_v2.css" type="text/css" media="screen"/>
+<script type="text/javascript" src="../../js/xFreeUploader.js"></script>
+
+<!-- 예제샘플용 공통함수 -->
+<script type="text/javascript" src="./xfu_ex_common.js"></script>
+
+<script type="text/javascript">
+var wFileDownload;
+var strServerType = "php";
+var xfuBasePath = "/xFreeUploader";
+
+function init() {
+	
+	// 서버타입 자동세팅(/index.html로 접근시에만 정상적으로 동작)
+	if(parent.document.getElementById("serverType")){
+	
+		strServerType = parent.document.getElementById("serverType").value;
+	}
+	
+	//var xfuFilePath = "/xFreeUploader/uploads";
+	var xfuFilePath = xfuBasePath + "/uploads";
+	
+	var origin = document.location.origin;
+	
+	if(origin) {
+	
+		xfuBasePath = origin + xfuBasePath;
+	} 
+	else {
+	
+		xfuBasePath = document.location.protocol + '//' + document.location.host + xfuBasePath;
+	}
+	
+	// 태그프리 홈페이지 분기처리
+	if(xfu_ex_common.checkDomain()){
+		
+		xfuBasePath = "/xfu_test/v2/xFreeUploader";
+		
+		//xfuFilePath = "/xfu_test/v2/xFreeUploader/uploads";
+		xfuFilePath = xfuBasePath + "/uploads";
+		
+		if(origin) {
+	
+			xfuBasePath = origin + xfuBasePath;
+		} 
+		else {
+		
+			xfuBasePath = document.location.protocol + '//' + document.location.host + xfuBasePath;
+		}		
+	}
+	
+	// 파일다운로드 자바스크립트 방식 호출
+	wFileDownload = new xFreeUploader({
+		render: "fileDownload",
+		basePath : xfuBasePath,
+		selectMode: "download",
+		filePath : xfuFilePath,
+		//serverType: "php",
+		serverType: strServerType,
+		bodyHeight: 250,
+		skinType : -1,
+		
+		// XFU 로드된 후 발생 이벤트
+		onLoad: function (data) {
+			//console.log("Load Complete");
+			//console.log(data);
+			
+			//var doc_id = wFileDownload.getRandomFileKey();				
+			var doc_id = "xfdocid_0000000000";	
+			var cookie = getCookie("xfu_test_id");
+
+			if(cookie){
+			
+				doc_id = cookie;
+			}
+			
+			$("#txtDocID").val(doc_id);
+			
+			if(doc_id === "xfdocid_0000000000"){
+			
+				$("#commentFileKey").html("<b>XFDocID File Key가 필요합니다. <br/>먼저 파일 이어서 받기(example_10.html) 페이지로 이동하여 파일을 업로드하시고 이 페이지로 다시 돌아오세요.</b>");
+			}
+
+			
+			
+			// 태그프리 사이트에서는 파일조회를 서버파일추가 방식으로 대체
+			if(xfu_ex_common.checkDomain()){
+			
+				// 서버파일추가
+				fileAttachAddTxt();
+				
+				$("#fileSearch").hide();				
+			} 
+			// 일반적인 테스트는 파일조회 처리
+			else {
+				
+				fileSearch();
+			}	
+			
+			// 상세내용 show/hide 처리
+			$("#btnCommentToggleDisplay").toggle(function(e){
+				
+				//$("#testDetail").show();
+				$("#testDetail").slideDown();
+				$(this).html("▲");				
+			}, 
+			function(e){
+				
+				//$("#testDetail").hide();
+				$("#testDetail").slideUp();
+				$(this).html("▼");
+			});
+		},
+		// 파일 조회 submit 발생 전
+		onBeforeSearch: function (data) {
+			console.log("파일 조회 전");
+			console.log(data);
+		},
+		// 파일 조회 submit 발생 후
+		onSearchCallback: function (data) {
+			console.log("파일 조회 후");
+			console.log(data);
+		},
+		// 다운로드 실행 후 submit 발생 전
+		onBeforeSubmit: function (data) {
+			console.log("다운로드 받기전");
+			console.log(data);
+			
+			var test_doc_id = $("#txtDocID").val();
+			
+			if(test_doc_id === ""){
+			
+				test_doc_id = "xfdocid_0000000000";
+			}			
+			
+			wFileDownload.setDocID(test_doc_id);
+		},
+		// 다운로드 정상 콜백
+		onSuccessCallback: function () {
+			console.log("파일다운로드 성공");
+		},
+		// 다운로드 비정상 콜백
+		onFailCallback: function (error) {
+			console.log("파일다운로드 실패");
+			console.log(error);
+		}
+	});
+}
+
+// 서버파일추가
+function fileAttachAddTxt() {
+
+	
+}
+
+function getCookie(name) {
+	var value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+	return value? value[2] : null;
+};
+
+// 앞에 남는 자리수 만큼 0을 채우기
+function _fillZero(width, str){
+
+	return str.length >= width ? str:new Array(width-str.length+1).join('0')+str;//남는 길이만큼 0으로 채움
+}
+
+// 서버파일조회
+function fileSearch() {
+
+	// 오늘날짜폴더명 생성
+	var now = new Date();
+	var year = _fillZero(4, String(now.getFullYear()));
+	var month = _fillZero(2, String(now.getMonth() + 1));
+	var day = _fillZero(2, String(now.getDate()));
+	var dateFolder = year + month + day;
+	
+	// 파일키 가져오기
+	var test_doc_id = $("#txtDocID").val();
+	
+	if(test_doc_id === ""){
+	
+		test_doc_id = "xfdocid_0000000000";
+		$("#txtDocID").val(test_doc_id);
+	}
+	
+	// 조회할 파일경로 생성(오늘날짜 기준)
+	var strFilePath = wFileDownload.options.filePath + "/" + dateFolder + "/" + test_doc_id
+	
+	// 파일조회
+	var dataObj = {
+		"filePath": strFilePath,
+		"filterWord": "*"
+	};
+	wFileDownload.fileSearch(dataObj);
+}
+// 파일선택다운로드
+function fileSelectDownload() {
+	wFileDownload.fileSelectDownload();
+}
+// 파일전체다운로드
+function fileAllDownload() {
+	wFileDownload.fileAllDownload();
+}
+
+// 파일 이어서 전송 페이지로 이동
+function linkPage(){
+	
+	if(parent){
+
+		parent.fnTabFocus(9);
+	} 
+	else {
+	
+		location.href = "./example_10.html";
+	}
+}
+
+</script>
+<style type="text/css">
+
+</style>
+</head>
+
+<body onload="init()">
+    <div class="title">파일 이어서 받기</div>
+	<div class="comment">
+        <ul>
+			<li><b>설명 및 해당 조건</b></li>
+			<ul style="list-style-type: circle;">
+				<li>X-Free Uploader는 파일다운로드 도중에 중지되었던 파일을 이어서 받기가 가능합니다.</li>
+				<li><b>파일 다운로드의 경우에는 2건 이상의 체크선택된 파일의 누적 사이즈가 큰 경우 압축파일을 생성하는 시간이 소요되는데 시간이 소요되는 동안 진행상태를 움직이는 원형 프로그래스바 형태로 보여줍니다.</b></li>
+				<li>압축파일 생성이 모두 완료되면 브라우저에서 파일 다운로드가 진행됩니다.</li>
+				<li>그러나 위의 진행상태 도중에 <b>사용자가 새로고침</b>을 하거나 <b>브라우저가 종료</b>되면 페이지는 초기화되지만 <b>진행중인 압축파일 생성은 계속 진행되어 해당 서버상에는 압축파일이 그대로 존재</b>하게 됩니다.</li>			
+				<li>위의 경우에 의해 <b>서버상에 생성되어 남아있는 압축파일</b>을 다시 다운로드 받기 위해서는 <b>XFDocID(File Key)</b> 정보가 필요합니다. </li>
+				<li>다시 말해 이어서 받기 기능을 시도할 때 중단을 했었던 시점의 <b>XFDocID(File Key)</b> 정보가 일치하다는 전제 하에 중단되었던 파일의 이어서 받기가 가능합니다.</li>
+			</ul>
+			<li>
+				<b>테스트 절차</b>
+				<button id="btnCommentToggleDisplay" type="button" class="toggleDisplay-button">▼</button>
+			</li>
+			<ul style="list-style-type: circle; background: rgb(255, 242, 229); display:none;" id="testDetail">
+				<li><b style="color:red;">1) 다운로드 받기 전에 샘플화면 상에 보이는 파일키 (XFDocID) 값을 복사합니다.</b></li>
+				<div>
+					<img src="./images/ex10_02.png" alt="" style="width:80%;" />
+				</div>
+				<li>2) 사이즈가 큰 파일 2건 이상을 체크선택한 후 [다운로드]를 누릅니다.</li>
+				<div>
+					<img src="./images/ex11_02.png" alt="" style="width:80%;" />
+				</div>
+				<li><b>3) 파일 다운로드의 경우에는 2건 이상의 체크선택된 파일의 누적 사이즈가 큰 경우 압축파일을 생성하는 시간이 소요되는데 시간이 소요되는 동안 진행상태를 움직이는 원형 프로그래스바 형태로 보여줍니다.</b></li>				
+				<div>
+					<img src="./images/ex11_00.png" alt="" style="width:80%;" />
+				</div>
+				<li><b style="color:red;">4) 위의 진행상태 도중에 브라우저를 새로고침합니다.</b></li>
+				
+				<li><b style="color:red;">5) 이전에 복사했었던 파일키 (XFDocID) 값을 아래 파일키 (XFDocID) 값 정보에 붙여넣기합니다.</b></li>
+				<div>
+					<img src="./images/ex10_02.png" alt="" style="width:80%;" />
+				</div>
+				
+				<li>6) 파일 다운로드를 다시 시도합니다. 파일키 (XFDocID) 값 정보 기준으로 새로고침하기 전에 다운로드 수행하지 못했던 파일이 존재하는지 체크되어 안내 메시지를 보여주고 [확인]버튼 누르면 다운로드가 진행됩니다.</li>
+				
+				<li><b>7) 파일키 (XFDocID)</b></li>
+				<ul style="list-style-type: square;">
+					<li>해당 샘플화면에서 보여지는 파일키 (XFDocID) 정보는 <b>화면이 새로고침될때마다 정보가 Random으로 변경되어 자동으로 세팅</b>됩니다.<br/>(X-Free Uploader가 제공하는 onLoad 시점에서 getRandomFileKey함수 사용)</li>
+					<li>해당 파일키가 지정되지 않으면 기본적으로 파일키 정보는 "xfdocid_0000000000"로 세팅되어 /xfdocid_0000000000 폴더를 바라보게 됩니다.</li>
+					<li><b style="color:red;">※ "/xfdocid_0000000000" 폴더 위치가 기준이 되어 파일다운로드가 실행되더라도 이어서 받기 기능은 가능하나 해당위치가 유니크하지 않기에 불특정다수의 압축파일 생성이 진행되어 원하지 않는 동작이 발생될 수 있습니다.</b></li>
+				</ul>
+			</ul>
+		</ul>
+    </div>
+		
+	<div class="caption-pnl">▷ XFDocID (File Key)</div>
+	<div>
+		<ul>
+			<li>
+				<b>XFU v2에서 새로 추가된 XFDocID (게시물에 매핑될 유니크한 File Key) : </b>
+				<input type="text" size="20" id="txtDocID"/>
+				<button type="button" id="fileSearch" onclick="fileSearch();" class="toggleDisplay-button">서버파일조회</button>
+			</li>
+			<li id="commentFileKey" style="color:red;">
+				<b>파일 이어서 전송(example_10.html) 페이지로부터 전달받은 XFDocID File Key 입니다.</b>
+			</li>
+		</ul>
+	</div>
+	
+    <div class="caption-pnl">▶ 파일 다운로드</div>
+	<div class="xFreeUploader-pnl" id="fileDownload"></div>
+	
+	<div class="caption-pnl">▷ 관련 컨트롤</div>
+	<div class="example-button-pnl">
+		<!--
+		<button type="button" id="fileAttachAddTxt" onclick="fileAttachAddTxt();">서버파일추가</button>
+		-->
+		<button type="button" id="fileSelectDownload" onclick="fileSelectDownload();">선택다운로드</button>
+		<button type="button" id="fileAllDownload" onclick="fileAllDownload();">전체다운로드</button>
+		<button type="button" id="fileLink1" onclick="linkPage();">파일 이어서 전송 페이지 이동</button>
+	</div>	
+</body>
+</html>

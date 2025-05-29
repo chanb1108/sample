@@ -1,0 +1,172 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="-1" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1, user-scalable=no"/>
+<title>외부 드롭존 기능</title>
+<link rel="stylesheet" href="./images/ex_v2.css" type="text/css" media="screen"/>
+<script type="text/javascript" src="../../js/xFreeUploader.js"></script>
+
+<!-- 예제샘플용 공통함수 -->
+<script type="text/javascript" src="./xfu_ex_common.js"></script>
+
+<script type="text/javascript">
+var wFileUpload;
+var strServerType = "php";
+var xfuBasePath = "/xFreeUploader";
+
+function init(){
+
+	// 서버타입 자동세팅(/index.html로 접근시에만 정상적으로 동작)
+	if(parent.document.getElementById("serverType")){
+	
+		strServerType = parent.document.getElementById("serverType").value;
+	}
+	
+	//var xfuFilePath = "/xFreeUploader/uploads";
+	var xfuFilePath = xfuBasePath + "/uploads";
+	
+	var origin = document.location.origin;
+	
+	if(origin) {
+	
+		xfuBasePath = origin + xfuBasePath;
+	} 
+	else {
+	
+		xfuBasePath = document.location.protocol + '//' + document.location.host + xfuBasePath;
+	}
+	
+	// 태그프리 홈페이지 분기처리
+	if(xfu_ex_common.checkDomain()){
+		
+		xfuBasePath = "/xfu_test/v2/xFreeUploader";
+		
+		//xfuFilePath = "/xfu_test/v2/xFreeUploader/uploads";
+		xfuFilePath = xfuBasePath + "/uploads";
+		
+		if(origin) {
+	
+			xfuBasePath = origin + xfuBasePath;
+		} 
+		else {
+		
+			xfuBasePath = document.location.protocol + '//' + document.location.host + xfuBasePath;
+		}		
+	}
+	
+	// 파일업로드 자바스크립트 방식 호출
+	wFileUpload = new xFreeUploader({
+		render : "fileUpload",
+		basePath : xfuBasePath,
+		selectMode : "upload",
+		filePath : xfuFilePath,
+		//serverType: "php",
+		serverType: strServerType,
+		maxCount : 15,
+		singleMaxSize: 200,
+		totalMaxSize: 1024,
+		bodyHeight: 300,
+		skinType : -1,
+		buttonHide : ["btnFileAdd"],
+		
+		// 외부 드롭존 영역 설정(selector) - 해당 웹페이지 내에 있는 요소만 해당합니다.
+		dropZone : "#spanDz1, #spanDz2",
+		
+		// [파일추가] 버튼 클릭 이벤트핸들러
+		onAddFile: function (data) {
+			console.log("파일추가");
+		},
+		// [항목제거] 버튼 클릭 이벤트핸들러
+		onDeleteFile: function (data) {
+			console.log("항목제거");
+		},
+		// [항목전체제거] 버튼 클릭 이벤트핸들러
+		onDeleteAllFile: function (data) {
+			console.log("항목전체제거");
+		},
+		// [전송(테스트)] 버튼 클릭 이벤트핸들러
+		onBeforeSubmit: function (data) {
+			console.log("파일전송하기전");
+		},                                  
+		// 업로드 정상 콜백
+		onSuccessCallback: function (data) {
+			console.log("Upload success");
+			console.log(data);
+		},
+		// 업로드 정상 콜백
+		onAllSuccessCallback: function (data) {
+			
+		},
+		// 업로드 비정상 콜백
+		onFailCallback: function (data) {
+			console.log("Upload fail");
+			console.log(data);
+		},
+		onLoad : function(data){
+		
+			
+		}
+	});
+}
+
+// 파일추가
+function fileAdd() {
+	wFileUpload.fileAdd();
+}
+// 파일전송
+function fileSubmit() {
+	wFileUpload.fileSubmit();
+}
+// 항목제거
+function fileDelete() {
+	wFileUpload.fileDelete();
+}
+// 항목전체제거
+function fileAllDelete() {
+	wFileUpload.fileAllDelete();
+}
+
+
+</script>
+<style type="text/css">
+
+</style>
+</head>
+
+<body onload="init()">
+    <div class="title">외부 드롭존 기능</div>
+    <div class="comment">
+        <ul>
+			<li><b>설명</b></li>
+			<ul style="list-style-type: circle;">
+				<li>X-Free Uploader 제품은 자체 drag & drop 영역 뿐만 아니라 별도로 지정한 DropZone영역에 파일을 drag & drop하면 파일목록에 항목을 추가할 수 있습니다.</li>
+				<li><b style="color:red;">※ dropZone 지정은 해당 웹페이지 내에 있는 요소만 해당합니다.</b></li>
+			</ul>
+		</ul>
+    </div>
+	
+	<div class="caption-pnl">▶ 파일 업로드</div>	
+	<div class="xFreeUploader-pnl" id="fileUpload"></div>
+	<!--
+	<div class="example-button-pnl">
+		<button type="button" id="fileSubmit" onclick="fileSubmit();">파일전송</button>
+	</div>
+	-->
+	
+	<div class="caption-pnl">▷ 외부 드롭존</div>
+	<div class="colgroup-pnl">
+		<div class="colgroup-left-pnl">
+			<span id="spanDz1" class="dropzone-pnl">DropZone 1</span>
+		</div>
+		<div class="colgroup-right-pnl">
+			<span id="spanDz2" class="dropzone-pnl">DropZone 2</span>
+		</div>
+    </div>
+	
+</body>
+</html>

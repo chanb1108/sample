@@ -1,0 +1,535 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="-1" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1, user-scalable=no"/>
+<title>게시판 편집</title>
+<link rel="stylesheet" href="./css/bbs_common.css" type="text/css" media="screen"/>
+<link rel="stylesheet" href="../images/ex_v2.css" type="text/css" media="screen"/>
+<script type="text/javascript" src="./js/jquery-1.8.1.min.js"></script>
+
+<!-- 예제샘플용 공통함수 -->
+<script type="text/javascript" src="../xfu_ex_common.js"></script>
+
+<!-- 게시판 공통함수 -->
+<script type="text/javascript" src="./js/bbs_common.js"></script>
+
+<!-- X-Free Uploader -->
+<script type="text/javascript" src="../../../js/xFreeUploader.js"></script>
+
+<!-- X-Free Editor -->
+<!--script type="text/javascript" src="/XFE/js/xfe_main.js"></script-->
+
+<script type="text/javascript">
+/*
+ * [게시판 편집화면]
+ * 해당 게시판 예제는 DB를 사용하지 않고 dataobj.js에 json데이터를 텍스트로 저장하여 활용한 예제로 
+ * XFU를 연동한 게시판의 가장 기본적인 CRUD의 흐름을 개발자분들이 이해하기 쉽게 샘플로 제작한 페이지이므로 
+ * 일부분 정도만 참고하시면 됩니다.
+ */
+
+// XFE 전역변수
+var xfe;
+
+// XFU 업로드모드 전역변수
+var wFileUpload;
+
+// 게시물 데이터 전역변수
+var dataObj = [];
+
+// 삭제파일정보 전역변수
+var deleteFileObj = [];
+
+// XFU DocID : 업로드할때 유니크한 파일키 정보
+var xfuDocID_data = "";
+
+var strServerType = "php";
+
+var xfuBasePath = "/xFreeUploader";
+
+// DOM OnLoad
+$(document).ready(function(){
+
+	// X-Free Editor 사용여부?
+	if(bbs_common.isXFE){
+	
+		// XFE 사용
+		xfe = new XFE({
+			basePath : location.protocol + "//" + document.domain + ":" + location.port + "/XFE",
+			width : '100%',
+			height : '500px',
+			ignoreMinHeight : true,      
+			onLoad : init_xfeLoad
+		});
+		xfe.render('ex_div');
+		
+		$("#viewer").hide();
+	} 
+	else {
+	
+		// XFE 미사용
+		$("#edit").contents().find("body").attr("contenteditable", true);
+		init_xfeLoad();
+		
+		$("#viewer").show();
+	}
+});
+
+function init_xfeLoad(){
+
+	// 서버타입 자동세팅(/index.html로 접근시에만 정상적으로 동작)
+	if(parent.document.getElementById("serverType")){
+	
+		strServerType = parent.document.getElementById("serverType").value;		
+	}
+	
+	var origin = document.location.origin;
+	
+	if(origin) {
+	
+		xfuBasePath = origin + xfuBasePath;
+	} 
+	else {
+	
+		xfuBasePath = document.location.protocol + '//' + document.location.host + xfuBasePath;
+	}
+	//var xfuFilePath = "/xFreeUploader/examples/v2/bbs/uploads_bbs";
+	var xfuFilePath = xfuBasePath + "/examples/v2/bbs/uploads_bbs";
+	
+	// 태그프리 홈페이지 분기처리
+	if(xfu_ex_common.checkDomain()){
+		
+		xfuBasePath = "/xfu_test/v2/xFreeUploader";
+		
+		if(origin) {
+	
+			xfuBasePath = origin + xfuBasePath;
+		} 
+		else {
+		
+			xfuBasePath = document.location.protocol + '//' + document.location.host + xfuBasePath;
+		}
+		//xfuFilePath = "/xfu_test/v2/xFreeUploader/examples/v2/bbs/uploads_bbs";
+		xfuFilePath = xfuBasePath + "/examples/v2/bbs/uploads_bbs";
+	}
+	
+	// X-Free Uploader 선언(업로드모드)
+	wFileUpload = new xFreeUploader({
+		render: "fileUpload",
+		basePath : xfuBasePath,
+		selectMode: "upload",
+		filePath: xfuFilePath,
+		
+		//serverType: "php",
+		//serverType: bbs_common.serverType,
+		serverType: strServerType,
+		
+		bodyHeight : 250,
+		
+		// 파일전송시 첨부항목이 1건도 없으면 유효성 체크를 무조건 하게 되는데 이 유효성체크를 해당 옵션을 적용하면 해제할 수 있다.
+		validCheck : false,
+		
+		// 업로드 모드에서 파일삭제를 하기 위한 옵션
+		// (다운로드모드에서만 서버삭제가 가능하나 해당 옵션을 적용하면 업로드모드 도 서버파일삭제가 가능하다)
+		isUploadServerFileDelete : true,
+		
+		// XFU 로드된 후 발생 이벤트
+		onLoad: function (data) {
+			//console.log("Load Complete");
+			//console.log(data);
+			init_xfuLoad();
+		},
+		// [파일추가] 버튼 클릭 이벤트핸들러
+		onAddFile: function (data) {
+			console.log("파일추가");
+			console.log(data);
+		},
+		// [항목제거] 버튼 클릭 이벤트핸들러
+		onDeleteFile: function (data) {
+			console.log("항목제거");
+			console.log(data);
+			
+			// 항목삭제한 파일정보 세팅
+			for(var i=0; i<data.beforeDeleteData.length; i++){
+			
+				// serverFilePath의 정보가 ""인 경우는 로컬에서 새로 항목추가한 파일이고
+				// serverFilePath의 정보가 존재한 경우는 서버상에 이미 존재한 파일이므로 아래 로직은 서버상에 존재한 파일만 컨트롤 한다.
+				if(data.beforeDeleteData[i].serverFilePath != ""){
+				
+					//wFileUpload.fileServerDelete([data.beforeDeleteData[i].serverFilePath + "/" + data.beforeDeleteData[i].fileName]);
+					deleteFileObj.push(data.beforeDeleteData[i]);
+					// 위와 같이 서버상에 존재한 파일중에 항목삭제한 파일정보들을 전역변수에 저장한다.
+				}
+			}
+		},
+		// [항목전체제거] 버튼 클릭 이벤트핸들러
+		onDeleteAllFile: function (data) {
+			console.log("항목전체제거");
+			console.log(data);
+		},
+		// [전송(테스트)] 버튼 클릭 후 submit 발생 전 이벤트핸들러
+		onBeforeSubmit: function (data) {
+			console.log("파일전송하기전");
+			console.log(data);
+			//if (confirm("파일전송체크?")) return true;
+			
+			/*
+			if(xfuDocID_data === "" || typeof(xfuDocID_data) === "undefined"){
+			
+				return false;
+			} else {
+			
+				wFileUpload.setDocID(xfuDocID_data);
+			}
+			*/
+		},
+		// 업로드 정상 콜백
+		onSuccessCallback: function (data) {
+			console.log("파일업로드 성공");
+			console.log(data);
+			//console.log(data.fileName);      // n번째 파일명
+			//console.log(data.savePath);      // n번째 저장경로
+			//console.log(data.fileReName);    // n번째 중복처리된 파일명
+			//console.log(data.fileType);      // n번째 파일타입정보
+			//console.log(data.fileSize);      // n번째 파일크기
+		},
+		// 업로드 비정상 콜백
+		onFailCallback: function (error) {
+			console.log("파일업로드 실패");
+			console.log(error);
+		},
+		// 업로드 정상 콜백
+		onAllSuccessCallback: function (data) {
+			console.log("모든 파일업로드 성공");
+			console.log(data);
+			var fData = data;
+			for (var i = 0; i < fData.length; i++) {
+				//console.log(data[i].fileName);      // n번째 파일명
+				//console.log(data[i].savePath);      // n번째 저장경로
+				//console.log(data[i].fileReName);    // n번째 중복처리된 파일명
+				//console.log(data[i].fileType);      // n번째 파일타입정보
+				//console.log(data[i].fileSize);      // n번째 파일크기
+			}
+			
+			// 파일 업로드 전송처리 후 게시물 데이터 저장시도
+			saveData(data);
+		},
+		// XFU에서 서버파일삭제를 하기 위해선 아래 이벤트 함수 안 내용과 같이 true를 반환시켜야 한다.
+		onBeforeDeleteFile : function(){
+		
+			return true;
+		}
+	});
+
+}
+
+// XFU onLoad되고나서의 시점
+function init_xfuLoad(){
+	
+	// 게시물 데이터 조회
+	bbs_common.loadData("./uploads_bbs/dataobj.js", function(data){
+	
+		// XFU 랜덤키 생성
+		xfuDocID_data = wFileUpload.getRandomFileKey();
+		
+		var no = Number(bbs_common.getParameter("no"));
+		
+		if(no){
+		
+			if(typeof(data) !== "undefined"){
+			
+				for(var i=0; i<data.length; i++){
+				
+					if(data[i].no === no){
+					
+						// 해당 순번정보에 해당하는 게시물 데이터 내용 세팅
+						setDataToBoardEdit(data[i]);
+						
+						// 해당 게시물 데이터의 XFU DocID를 xfuDocID_data 전역변수에 세팅
+						xfuDocID_data = data[i].uploadDocID;
+					}
+				}
+			} else {
+			
+				data = [];
+			}
+		} 
+		
+		dataObj = data;
+		
+		// XFU에 XFU DocID를 세팅합니다. 세팅안하면 00000000 기본값이 세팅됩니다.
+		wFileUpload.setDocID(xfuDocID_data);
+	});
+	
+	// 해당화면의 이벤트 핸들러 등록
+	eventHandler();
+}
+
+// 해당화면에 게시물 데이터 세팅
+function setDataToBoardEdit(data){
+
+	// 작성자 세팅
+	$(".header #infoArea #writer").val(data.writer);
+	
+	// 제목 세팅
+	$(".header #infoArea #title").val(data.title);
+	
+	// 본문내용 세팅
+	if(bbs_common.isXFE){
+	
+		xfe.setBodyValue(data.contents);
+	} else {
+	
+		$("#edit").contents().find("body").append(data.contents);
+	}
+	
+	// 파일첨부항목 세팅
+	for(var i=0; i<data.uploadData.length; i++){
+	
+		wFileUpload.fileAttachAddTxt(data.uploadData[i].fileName, data.uploadData[i].savePath, data.uploadData[i].fileSize, data.uploadData[i].fileDate);
+	}
+}
+
+// 해당화면의 이벤트 핸들러 등록
+function eventHandler(){
+
+	// [목록] 버튼 클릭
+	$("#btnList").click(function(e){
+	
+		location.href = "./list.html";
+		
+		e.preventDefault(e);
+		e.stopPropagation(e);
+	});
+	
+	// [저장] 버튼 클릭
+	$("#btnSave").click(function(e){
+	
+		// 파일전송 먼저 실행 -> onAllSuccessCallback 이벤트 함수에서 저장 후속처리 진행
+		//saveData();
+		wFileUpload.fileSubmit();
+		
+		e.preventDefault(e);
+		e.stopPropagation(e);
+	});
+}
+
+// 해당 게시물 저장 처리
+function saveData(xfuData){
+
+	var no = Number(bbs_common.getParameter("no"));
+		
+	bbs_common.loadData("./uploads_bbs/dataobj.js", function(data){
+	
+		if(typeof(data) === "undefined"){
+		
+			data = [];
+		}
+		
+		
+		dataObj = data;
+		
+		// 파일 추가 처리
+		var uploadObj = [];
+		
+		// 기존에 첨부되었던 파일 업로드 데이터
+		for(var i=0; i<data.length; i++){
+		
+			if(data[i].no === Number(bbs_common.getParameter("no"))){
+			
+				for(var j=0; j<data[i].uploadData.length; j++){
+					
+					var obj = {};
+					obj["fileName"] = data[i].uploadData[j].fileName;
+					obj["fileSize"] = data[i].uploadData[j].fileSize;
+					obj["savePath"] = data[i].uploadData[j].savePath;
+					obj["fileDate"] = data[i].uploadData[j].fileDate;
+					
+					uploadObj.push(obj);
+				}
+			}
+		}
+		
+		// 새로 첨부된 파일 업로드 데이터
+		for(var i=0; i<xfuData.length; i++){
+		
+			var obj = {};
+			obj["fileName"] = xfuData[i].fileReName;
+			obj["fileSize"] = xfuData[i].fileSize;
+			obj["savePath"] = xfuData[i].savePath;
+			obj["fileDate"] = bbs_common.getToday();
+			
+			uploadObj.push(obj);
+		}
+		
+		// 서버파일 삭제 처리
+		for(var i=0; i<deleteFileObj.length; i++){
+		
+			for(var j=uploadObj.length-1; j>=0; j--){
+			
+				// 명확하게 경로정보 기준으로 비교 처리했다.
+				if(uploadObj[j].savePath + "/" + uploadObj[j].fileName === deleteFileObj[i].serverFilePath + "/" + deleteFileObj[i].fileName){
+				
+					// 서버파일삭제될 파일업로드 데이터를 삭제한다.
+					uploadObj.splice(j, 1);
+				}
+			}
+		
+			// 데이터 내 파일정보가 삭제되었으니 실제 서버파일을 삭제시킨다.
+			wFileUpload.fileServerDelete([deleteFileObj[i].serverFilePath + "/" + deleteFileObj[i].fileName]);
+		}
+		
+		// 순번이 존재할 때, 다시 말해 수정중인 상태
+		if(no){
+		
+			for(var i=0; i<data.length; i++){
+		
+				if(data[i].no === no){
+				
+					data[i] = {
+						"no" : no,
+						"writer" : $(".header #infoArea #writer").val(),
+						"title" : $(".header #infoArea #title").val(),   
+						"contents" : (bbs_common.isXFE)? xfe.getBodyValue() : $("#edit").contents().find("body").html(),
+						"writeDate" : bbs_common.getToday(),
+						"count" : data[i].count,
+						"uploadData" : uploadObj,
+						"uploadDocID" : data[i].uploadDocID
+					};
+					
+					// 업로드 파일키 기존값 세팅
+					xfuDocID_data = data[i].uploadDocID;
+				}
+			}
+			
+			dataObj = data;
+			
+		} 
+		// 순번이 존재하지 않으므로 신규 등록 중일 때
+		else {
+		
+			// 가장 최신 순번의 다음 순번정보 세팅
+			var seq = (data.length === 0)? 1 : data[data.length-1].no + 1;
+			
+			var newObj = {
+				"no" : seq,
+				"writer" : $(".header #infoArea #writer").val(),
+				"title" : $(".header #infoArea #title").val(),   
+				"contents" : (bbs_common.isXFE)? xfe.getBodyValue() : $("#edit").contents().find("body").html(),
+				"writeDate" : bbs_common.getToday(),
+				"count" : 0,
+				"uploadData" : uploadObj,
+				
+				// 업로드 파일키 유니크한 랜덤값 세팅
+				"uploadDocID" : xfuDocID_data
+			};
+			
+			dataObj.push(newObj);
+		}
+		
+		// 해당 게시물 데이터 저장 프로세스 호출
+		serverSaveData(dataObj);				
+		//console.log(dataObj);
+	});
+}
+
+// 해당 게시물 데이터 저장처리
+function serverSaveData(jsonData){
+
+	// json데이터를 string변환
+	var jsonObjToStr = JSON.stringify(jsonData);
+	
+	// 특수문자 치환 처리
+	jsonObjToStr = bbs_common.replaceSpecialChar(jsonObjToStr, false);
+	
+	// string -> json형태로 변환
+	jsonData = JSON.parse(jsonObjToStr);
+
+	// 해당 json데이터 저장 프로세스로 전달
+	var saveServerFileUrl = "./svr/content_save." +strServerType;
+	
+	bbs_common.loadData(saveServerFileUrl, function(data){
+	
+		console.log(data);
+		alert("데이터가 저장되었습니다.");
+		location.href = "./list.html";
+		
+	}, jsonData);
+}
+</script>
+<style type="text/css">
+#infoArea {
+    width: 100%;
+    margin: 0 auto;
+}
+#infoArea label {
+    display: inline-block;
+    width: 70px;
+    letter-spacing: 5px;
+    text-align: center;
+    padding-bottom: 13px;
+    font-size: 0.8rem;
+}
+#infoArea input {
+    border: none;
+    border-bottom: 1px solid #aaa;
+    outline: none;
+    text-indent: 10px;
+}
+#viewer{
+	width : 100%;
+	height: 260px;
+	overflow:auto;	
+	border : 1px solid rgb(173, 173, 173);
+	margin: 0px 0px 5px 0px;
+}
+#edit{
+	width: 100%; 
+	vertical-align: top;
+	height : 260px;
+	padding: 0px;
+    margin: 0px;
+}
+</style>
+</head>
+
+<body>
+	<div class="title">게시판 샘플(No DB)</div>
+	<div class="comment">
+        <ul>
+			<li><b>설명</b></li>
+			<ul style="list-style-type: circle;">
+				<li>해당 게시판 예제는 <b>DB를 사용하지 않고 dataobj.js에 json데이터를 텍스트로 저장</b>하여 활용한 예제입니다.</li>
+				<li><b>X-Free Uploader를 연동한 게시판의 가장 기본적인 CRUD의 흐름을 개발자분들이 이해하기 쉽게 샘플로 제작한 페이지</b>이므로 일부분 정도만 참고하시면 됩니다.</li>
+			</ul>
+		</ul>
+    </div>
+	<div class="header">
+		<div id="infoArea">
+			<p>
+				<label for="writer">작성자</label>
+				<input id="writer" type="text" title="작성자">
+			</p>
+			<p>
+				<label for="title">제목</label>
+				<input id="title" type="text" title="제목">
+			</p>
+		</div>
+	</div>
+	<div class="content">
+		<div id="ex_div"></div>
+		<div id="viewer">
+			<iframe id="edit" frameborder="0" src=""></iframe>
+		</div>
+		<div id="fileUpload" class="xFreeUploader-pnl"></div>
+	</div>
+	<div class="footer">
+		<button type="button" id="btnList">목록</button>
+		<button type="button" id="btnSave">저장</button>
+	</div>
+</body>
+</html>

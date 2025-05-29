@@ -1,0 +1,329 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="-1" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1, user-scalable=no"/>
+<title>파일 다운로드</title>
+<link rel="stylesheet" href="./images/ex_v2.css" type="text/css" media="screen"/>
+<script type="text/javascript" src="../../js/xFreeUploader.js"></script>
+
+<!-- 예제샘플용 공통함수 -->
+<script type="text/javascript" src="./xfu_ex_common.js"></script>
+
+<script type="text/javascript">
+var wFileDownload;
+var strServerType = "php";
+var xfuBasePath = "/xFreeUploader";
+
+function init(){
+	// 서버타입 자동세팅(/index.html로 접근시에만 정상적으로 동작)
+	if(parent.document.getElementById("serverType")){
+	
+		strServerType = parent.document.getElementById("serverType").value;
+	}
+	
+	//var xfuFilePath = "/xFreeUploader/uploads";
+	var xfuFilePath = xfuBasePath + "/uploads";
+	
+	var origin = document.location.origin;
+	
+	if(origin) {
+	
+		xfuBasePath = origin + xfuBasePath;
+	} 
+	else {
+	
+		xfuBasePath = document.location.protocol + '//' + document.location.host + xfuBasePath;
+	}
+
+	
+	
+	// 태그프리 홈페이지 분기처리
+	if(xfu_ex_common.checkDomain()){
+		
+		xfuBasePath = "/xfu_test/v2/xFreeUploader";
+		
+		//xfuFilePath = "/xfu_test/v2/xFreeUploader/uploads";
+		xfuFilePath = xfuBasePath + "/uploads";
+		
+		if(origin) {
+	
+			xfuBasePath = origin + xfuBasePath;
+		} 
+		else {
+		
+			xfuBasePath = document.location.protocol + '//' + document.location.host + xfuBasePath;
+		}
+		
+	}
+	
+	// 파일다운로드 자바스크립트 방식 호출
+	wFileDownload = new xFreeUploader({
+		render: "fileDownload",
+		basePath : xfuBasePath,
+		selectMode: "download",
+		filePath : xfuFilePath,
+		//serverType: "php",
+		serverType: strServerType,
+		bodyHeight: 250,
+		skinType : -1,
+		
+		// XFU 로드된 후 발생 이벤트
+		onLoad: function (data) {
+			//console.log("Load Complete");
+			//console.log(data);
+			
+			// 태그프리 사이트에서는 파일조회를 서버파일추가 방식으로 대체
+			if(xfu_ex_common.checkDomain()){
+			
+				// 서버파일추가
+				fileAttachAddTxt();
+				
+				$("#cmbFilePath, #trFileSearch").hide();
+				
+			} 
+			// 일반적인 테스트는 파일조회 처리
+			else {
+				
+				fnSelectedFilePath();
+
+				var dataObj = {
+					"filePath": wFileDownload.options.filePath,
+					//"filterWord": wFileDownload.options.filterWord
+					"filterWord": "*"
+				};
+				wFileDownload.fileSearch(dataObj);
+			}			
+		},
+		// 파일 조회 submit 발생 전
+		onBeforeSearch: function (data) {
+			console.log("파일 조회 전");
+			console.log(data);
+		},
+		// 파일 조회 submit 발생 후
+		onSearchCallback: function (data) {
+			console.log("파일 조회 후");
+			console.log(data);
+		},
+		// 다운로드 실행 후 submit 발생 전
+		onBeforeSubmit: function (data) {
+			console.log("다운로드 받기전");
+			console.log(data);
+		},
+		// 다운로드 정상 콜백
+		onSuccessCallback: function (data) {
+			console.log("파일다운로드 성공");
+			console.log(data);
+		},
+		// 다운로드 비정상 콜백
+		onFailCallback: function (error) {
+			console.log("파일다운로드 실패");
+			console.log(error);
+		},
+		// [선택제거] 버튼 클릭 이벤트핸들러
+		onDeleteFile: function (data) {
+			console.log("선택제거");
+			console.log(data);
+			
+			// 파일 조회
+			var dataObj = {
+				"filePath": wFileDownload.options.filePath,
+				//"filterWord": wFileDownload.options.filterWord
+				"filterWord": "*"
+			};
+			wFileDownload.fileSearch(dataObj);
+			
+			// 빈폴더 삭제 처리
+			wFileDownload.emptyFolderDelete(wFileDownload.options.filePath);
+		},
+		// [항목전체제거] 버튼 클릭 이벤트핸들러
+		onDeleteAllFile: function (data) {
+			console.log("항목전체제거");
+			console.log(data);
+		}
+	});
+}
+
+// 서버파일추가
+function fileAttachAddTxt() {
+	
+	/*
+	if(xfu_ex_common.checkDomain()){
+	
+		wFileDownload.fileAttachAddTxt("ex10_01.png", "/xfu_test/v2/xFreeUploader/examples/v2/images", 13781, "20220404163900");
+		wFileDownload.fileAttachAddTxt("ex10_03.png", "/xfu_test/v2/xFreeUploader/examples/v2/images", 4572, "20220302160300");	
+	} else {
+	
+		wFileDownload.fileAttachAddTxt("ex10_01.png", "/xFreeUploader/examples/v2/images", 13781, "20220404163900");
+		wFileDownload.fileAttachAddTxt("ex10_03.png", "/xFreeUploader/examples/v2/images", 4572, "20220302160300");
+	}
+	*/
+	
+	wFileDownload.fileAttachAddTxt("ex10_01.png", xfuBasePath + "/examples/v2/images", 13781, "20220404163900");
+	wFileDownload.fileAttachAddTxt("ex10_03.png", xfuBasePath + "/examples/v2/images", 4572, "20220302160300");
+}
+
+// 서버파일조회
+function fileSearch() {
+	var dataObj = {
+		"filePath": wFileDownload.options.filePath,
+		//"filterWord": wFileDownload.options.filterWord
+		"filterWord": "*"
+	};
+	wFileDownload.fileSearch(dataObj);
+}
+// 파일선택다운로드
+function fileSelectDownload() {
+	wFileDownload.fileSelectDownload();
+}
+// 파일전체다운로드
+function fileAllDownload() {
+	wFileDownload.fileAllDownload();
+}
+
+// 서버파일삭제
+function fileServerDelete(){
+
+	// 임시로 서버파일추가한 ex10_01.png, ex10_03.png은 삭제처리 하지 않는다.
+	var checkedFileList = wFileDownload.getFileList(true)
+	for(var i=0; i<checkedFileList.length; i++){
+	
+		if(checkedFileList[i].serverFilePath === "/xFreeUploader/examples/v2/images"){
+			alert("체크선택된 파일 중에 예제파일(" + checkedFileList[i].fileName + ")이 존재합니다.\n삭제 처리 하지 않습니다.");
+			return false;
+		}		
+	}
+
+	wFileDownload.fileServerDelete();
+}
+
+function fnSelectedFilePath(){
+	
+	$("#selectFilePath").change(function(e){
+		
+		// filePath 데이터 세팅
+		var _strFilePath = $(this).val();
+		wFileDownload.options.filePath = _strFilePath;
+		
+		// XFU 옵션에 filePath 세팅
+		wFileDownload.setFilePath(_strFilePath);
+		
+		// 파일조회
+		var dataObj = {
+			"filePath": wFileDownload.options.filePath,
+			//"filterWord": wFileDownload.options.filterWord
+			"filterWord": "*"
+		};
+		wFileDownload.fileSearch(dataObj);
+		
+		e.preventDefault();
+		e.stopPropagation();
+	});	
+}
+
+</script>
+<style type="text/css">
+
+</style>
+</head>
+
+<body onload="init()">
+    <div class="title">파일 조회 / 다운로드 / 삭제</div>
+    
+	<div class="caption-pnl">▶ 파일 다운로드</div>
+	<div class="comment">
+        <ul>
+			<li><b>설명</b></li>
+			<ul style="list-style-type: circle;">
+				<li>X-Free Uploader는 지정된 서버상에 존재하는 파일들을 조회 및 다운로드 할 수 있습니다.</li>
+			</ul>
+		</ul>
+    </div>
+	
+	<div class="xFreeUploader-pnl" id="fileDownload"></div>
+	
+	<div class="empty-pnl" id="cmbFilePath">
+		<span>파일디렉토리 경로(filePath) : </span>
+		<span>
+			<select id="selectFilePath">
+				<option value="/xFreeUploader/uploads" selected>/xFreeUploader/uploads</option>
+				<option value="/xFreeUploader/uploads2">/xFreeUploader/uploads2</option>
+			</select>
+		</span>
+	</div>
+	
+	<div class="caption-pnl">▷ 관련 컨트롤</div>
+	<div class="comment">
+        <ul>
+			<li><b>설명</b></li>
+		</ul>		
+    </div>
+	<div class="table-pnl">
+		<table border="1" cellpadding="0" cellspacing="0">
+			<colgroup>
+				<col width="40%"/>
+				<col width="60%"/>
+			</colgroup>		
+			<tbody>
+				<tr>
+					<th><p>버튼</p></th>
+					<th><p>기능 설명</p></th>
+				</tr>
+				<tr>
+					<td style="text-align : center;">
+						<button type="button" id="fileAttachAddTxt" onclick="fileAttachAddTxt();">서버파일추가</button>
+					</td>
+					<td>
+						<p>서버상에 존재하는 파일을 첨부목록에 행추가 시킬 수 있습니다.</p>
+						<p style="color:red;">(서버상에 존재하는 ex10_01.png, ex10_03.png파일을 추가합니다.)</p>
+					</td>
+				</tr>
+				<tr id="trFileSearch">
+					<td style="text-align : center;">
+						<button type="button" id="fileSearch" onclick="fileSearch();">서버파일조회</button>
+					</td>
+					<td>지정된 경로폴더를 기준으로 존재하는 파일들을 출력시킬 수 있습니다.</td>
+				</tr>
+				<tr>
+					<td style="text-align : center;">
+						<button type="button" id="fileSelectDownload" onclick="fileSelectDownload();">선택다운로드</button>
+					</td>
+					<td>
+						<p>체크선택된 항목을 기준으로 파일을 다운로드 받을 수 있습니다.</p>
+						<p style="color:red;">(체크선택된 항목이 1건인 경우에는 원본파일이 다운로드되며 2건 이상인 경우에는 압축파일로 다운로드 됩니다.)</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="text-align : center;">
+						<button type="button" id="fileAllDownload" onclick="fileAllDownload();">전체다운로드</button>
+					</td>
+					<td>
+						<p>목록에 있는 모든 항목의 파일들을 다운로드 받을 수 있습니다.</p>
+						<p style="color:red;">(목록에 존재하는 파일항목이 1건인 경우에는 원본파일이 다운로드되며 2건 이상인 경우에는 압축파일로 다운로드 됩니다.)</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="text-align : center;">
+						<button type="button" id="fileServerDelete" onclick="fileServerDelete();">서버파일삭제</button>
+					</td>
+					<td>체크선택된 항목을 기준으로 서버상에 존재하는 파일을 삭제시킬 수 있습니다.<br/>실제 서버상에서 파일이 삭제됩니다.</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	
+	<!--
+	<div class="example-button-pnl">
+		<button type="button" id="fileAttachAddTxt" onclick="fileAttachAddTxt();">서버파일추가</button>
+		<button type="button" id="fileSearch" onclick="fileSearch();">서버파일조회</button>
+		<button type="button" id="fileSelectDownload" onclick="fileSelectDownload();">파일선택다운로드</button>
+		<button type="button" id="fileAllDownload" onclick="fileAllDownload();">파일전체다운로드</button>
+		<button type="button" id="fileServerDelete" onclick="fileServerDelete();">서버파일삭제</button>
+	</div>	
+	-->
+</body>
+</html>

@@ -6,6 +6,7 @@ import java.util.List;
 
 import egovframework.example.sample.service.BoardService;
 import egovframework.example.sample.service.BoardVO;
+import egovframework.example.sample.service.FileVO;
 import egovframework.example.sample.service.OrgVO;
 
 import javax.annotation.Resource;
@@ -31,6 +32,18 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public List<BoardVO> selectBoardList(BoardVO vo) throws Exception {
 		return boardDAO.selectBoardList(vo);
+	}
+	
+	@Override
+	public List<BoardVO> selectSchBoardList(BoardVO vo) throws Exception {
+		return boardDAO.selectSchBoardList(vo);
+	}
+	
+	@Override
+	public BoardVO selectBoardDetail(BoardVO boardVo) throws Exception {
+		BoardVO vo = new BoardVO();
+		vo = boardDAO.selectBoardDetail(boardVo);
+		return vo;
 	}
 	
 	@Override
@@ -67,5 +80,35 @@ public class BoardServiceImpl implements BoardService {
 		
 		return resultMsg;
 	}
-
+	
+	@Override
+	public String insertFileList(List<FileVO> fileList) throws Exception {
+		
+		String resultMsg = "success";
+		
+		int istResult = boardDAO.insertFileList(fileList);
+		
+		log.debug("=========file insert : {}", istResult);
+		if (istResult < fileList.size()) {
+			resultMsg = "fail";
+		}
+		
+		return resultMsg;
+	}
+	
+	@Override
+	public String modifyBoard(BoardVO boardVo) throws Exception {
+		
+		String resultMsg = "success";
+		
+		boardVo.setBbModId("psb");
+		
+		int istResult = boardDAO.modifyBoard(boardVo);
+		
+		if (istResult <= 0) {
+			resultMsg = "fail";
+		}
+		
+		return resultMsg;
+	}
 }
