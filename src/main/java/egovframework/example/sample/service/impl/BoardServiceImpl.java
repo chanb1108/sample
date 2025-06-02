@@ -4,16 +4,16 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import egovframework.example.sample.service.BoardService;
-import egovframework.example.sample.service.BoardVO;
-import egovframework.example.sample.service.FileVO;
-import egovframework.example.sample.service.OrgVO;
-
 import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+import egovframework.example.sample.service.BoardService;
+import egovframework.example.sample.service.BoardVO;
+import egovframework.example.sample.service.FileVO;
+import egovframework.example.sample.service.OrgVO;
 
 
 @Service("boardService")
@@ -110,5 +110,10 @@ public class BoardServiceImpl implements BoardService {
 		}
 		
 		return resultMsg;
+	}
+	
+	@Override
+	public List<FileVO> selectFile(FileVO fileVo) throws Exception {
+		return boardDAO.selectFile(fileVo);
 	}
 }

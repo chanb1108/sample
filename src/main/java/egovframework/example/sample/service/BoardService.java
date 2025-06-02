@@ -19,5 +19,7 @@ public interface BoardService {
 	public String insertFileList(List<FileVO> fileList) throws Exception;
 	
 	public String modifyBoard(BoardVO boardVo) throws Exception;
+	
+	public List<FileVO> selectFile(FileVO fileVo) throws Exception;
 
 }

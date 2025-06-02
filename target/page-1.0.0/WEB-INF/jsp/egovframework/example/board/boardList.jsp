@@ -167,7 +167,7 @@
 						case 'event' : {
 							if (command.event.type == 'dblclick') {
 								const value = SBGrid3.getValue(grid, command.key, 'bbIdx');
-								alert(value + " 수정페이지로 이동");
+								alert(value + " 상세페이지로 이동");
 								modifyData(value);
 							}
 							break;	
@@ -189,7 +189,7 @@
 		}
 		
 		function modifyData (bbIdx) {
-			location.href = "insertBoardEditor.do?bbIdx=" + bbIdx;
+			location.href = "boardDetail.do?bbIdx=" + bbIdx;
 		}
 		
 	</script>

@@ -35,6 +35,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,6 +50,8 @@ import com.google.gson.JsonObject;
 
 @Controller
 public class XFreeUploader{
+	
+	protected Logger log = LoggerFactory.getLogger(getClass());
 
     String charsetName = "utf-8";
     private String FILE_TARGET_PATH = "//192.168.35.217/upload/file/";
@@ -608,6 +612,7 @@ public class XFreeUploader{
             // 웹자원의 최상단 루트 경로 지정
             //String RootPath = getServletContext().getRealPath(request.getServletPath());
             String RootPath = request.getServletContext().getRealPath("/");
+//            String RootPath = FILE_TARGET_PATH;
             int upPos = RootPath.lastIndexOf("\\");
             RootPath = RootPath.substring(0, upPos);
 
@@ -617,7 +622,7 @@ public class XFreeUploader{
             if ((pos = RootPath.lastIndexOf("/")) > 0)
             {
                 RootPath = RootPath + sfilePath;
-                webPath = webPath + sfilePath;
+                webPath = webPath + "/" + sfilePath;
             }
             else if ((pos = RootPath.lastIndexOf("\\")) > 0)
             {
@@ -641,6 +646,7 @@ public class XFreeUploader{
 
             //String serverPath = getServletContext().getRealPath(request.getServletPath());
             String serverPath = request.getServletContext().getRealPath("/");
+//        	String serverPath = FILE_TARGET_PATH + "\\";
 
             int upPos = serverPath.lastIndexOf("\\");
             serverPath = serverPath.substring(0, upPos);
@@ -661,7 +667,10 @@ public class XFreeUploader{
             }
 
             // 요청받은 파일경로
+            log.debug("===========searchUrl : {}",(String) (String) map.get("searchUrl"));
+            log.debug("===========map : {}", map);
             String searchFolder = serverPath + (String) (String) map.get("searchUrl") + docID_folder;
+//            String searchFolder = "//" + serverPath + "20250530/" + docID_folder;
             JsonArray arr=new JsonArray();
 
             try{
@@ -717,6 +726,7 @@ public class XFreeUploader{
 
             // 파라미터 전달 받기
             String postData = (String) map.get("downList");
+            postData = postData.replaceAll("&quot;", "\"");
 
             try{
                 JSONParser jsonParser = new JSONParser();

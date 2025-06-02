@@ -202,5 +202,61 @@ public class BoardController {
 		
 		return resultMsg;
 	}
+	
+	@RequestMapping(value = "/boardDetail.do")
+	public String boardDetail(HttpServletRequest request, Model model) throws Exception {
+		
+		BoardVO boardVo = new BoardVO();
+		int bbIdx = 0;
+		
+		if (request.getParameterMap().containsKey("bbIdx")) {
+			try {
+				bbIdx = Integer.parseInt(request.getParameter("bbIdx"));
+			}catch(Exception e) {
+				bbIdx = 0;
+			}
+			if(bbIdx > 0) {
+				boardVo.setBbIdx(bbIdx);
+				boardVo = boardService.selectBoardDetail(boardVo);
+			}
+		}		
+
+		log.debug("========request : {}",bbIdx);
+		
+		OrgVO orgVO = new OrgVO();
+		List<OrgVO> orgList = boardService.selectOrgList(orgVO);
+		for (OrgVO vo : orgList) {
+			if (vo.getOrIdx() == boardVo.getBbOrIdx()) {
+				boardVo.setOrName(vo.getOrName());
+			}
+		}
+
+		model.addAttribute("boardVo", boardVo);
+		
+		FileVO fileVo  = new FileVO();
+		
+		fileVo.setBfBbIdx(bbIdx);
+		log.debug("==============bf_bb_idx : {}",fileVo.getBfBbIdx());
+		List<FileVO> fileList = new ArrayList<FileVO>();
+		fileList = boardService.selectFile(fileVo); 
+		
+		if(fileList != null && fileList.size() > 0) {
+			String filterWord = "";
+			String filePath = "";
+			for (int i = 0; i < fileList.size(); i++) {
+				FileVO fvo = fileList.get(i);
+				if (i == 0) {
+					filterWord += fvo.getBfName();
+					filePath = fvo.getBfSrc();
+				} else {
+					filterWord += "|" + fvo.getBfName();
+				}
+			}
+		}
+		model.addAttribute("fileList", fileList);
+		
+		return "board/boardDetail";
+		
+	}
 
 }

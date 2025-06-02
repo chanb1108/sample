@@ -186,5 +186,11 @@
 			, BB_OPEN = #{bbOpen}
 		WHERE BB_IDX = #{bbIdx}
 	</update>
+	    
+    <select id="selectFile" parameterType="fileVO" resultMap="file">
+        SELECT *
+        FROM SIANADB.MARKET.BBS_FILE BF
+        WHERE BF.BF_BB_IDX = #{bfBbIdx}
+    </select>
 
 </mapper>

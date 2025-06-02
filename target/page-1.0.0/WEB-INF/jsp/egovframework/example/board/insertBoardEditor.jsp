@@ -57,9 +57,6 @@
 		},
 		onFailCallback:function(error){ console.log("upload fail"); }
 	});
-	
-	console.log(wFileUpload);
-	
 </script>
 <body style="text-align:center; margin:0 auto; display:inline; padding-top:100px;" onload="initEditor()">
 	
@@ -210,7 +207,13 @@
 	}
 	
 	$("#cansle").on("click", function (){
-		alert("입력 취소");
+		if (bbIdx != "") {
+			alert("상세페이지로 이동합니다.");
+			location.href = "boardDetail.do?bbIdx=" + bbIdx;
+		}else {
+			alert("게시판 목록 페이지로 이동합니다.");
+			location.href = "boardList.do";
+		}
 	})
 	
 	$("#save").on("click", function (){

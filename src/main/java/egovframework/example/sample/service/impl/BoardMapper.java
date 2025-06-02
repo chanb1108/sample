@@ -2,11 +2,11 @@ package egovframework.example.sample.service.impl;
 
 import java.util.List;
 
+import org.egovframe.rte.psl.dataaccess.mapper.Mapper;
+
 import egovframework.example.sample.service.BoardVO;
 import egovframework.example.sample.service.FileVO;
 import egovframework.example.sample.service.OrgVO;
-
-import org.egovframe.rte.psl.dataaccess.mapper.Mapper;
 
 @Mapper("boardMapper")
 public interface BoardMapper {
@@ -39,4 +39,8 @@ public interface BoardMapper {
 	 * 게시글을 등록한다. 
 	 */
 	int modifyBoard(BoardVO boardVO) throws Exception;
+	/**
+	 * 파일 path를 조회한다.
+	 */
+	List<FileVO> selectFile(FileVO fileVO) throws Exception;
 }
