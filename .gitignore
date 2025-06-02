@@ -1,0 +1,66 @@
+# ----------------------
+# Java 관련
+# ----------------------
+*.class
+*.jar
+*.war
+*.ear
+
+# 빌드 디렉터리
+/build/
+/bin/
+/out/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Eclipse
+.project
+.classpath
+.c9/
+.settings/
+*.launch
+
+# NetBeans
+/nbproject/private/
+/build/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# 로그 파일
+*.log
+
+# 환경 변수 파일
+*.env
+
+# ----------------------
+# Windows 관련
+# ----------------------
+# 시스템 파일
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# 휴지통 파일
+$RECYCLE.BIN/
+
+# 사용자별 설정 폴더
+*.lnk
