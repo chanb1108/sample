@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="category.dao.CategoryDAO">
+
+	<resultMap id="category" type="category.vo.CategoryVO">
+		<result property="caIdx" column="ca_idx" />
+		<result property="caId" column="ca_id" />
+		<result property="caName" column="ca_name" />
+		<result property="caDepth" column="ca_depth" />
+		<result property="caParentId" column="ca_parent_id" />
+		<result property="caSeq" column="ca_seq" />
+		<result property="caUse" column="ca_use" />
+		<result property="caPoint" column="ca_point" />
+		<result property="caOrgIdx" column="ca_org_idx" />
+		<result property="caRegDate" column="ca_reg_date" />
+		<result property="caRegId" column="ca_reg_id" />
+		<result property="caRegIp" column="ca_reg_ip" />
+		<result property="caModDate" column="ca_mod_date" />
+		<result property="caModId" column="ca_mod_id" />
+		<result property="caModIp" column="ca_mod_ip" />
+		<result property="orName" column="or_name" />
+	</resultMap>
+	
+	<select id="selectCategoryCount" parameterType="categoryVO" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			sianadb.market.category C
+		WHERE 1 = 1
+		AND ca_use = 'Y'
+		<if test="caOrgIdx != '' and caOrgIdx != null">
+			AND ca_org_idx = #{caOrgIdx}
+		</if>
+	</select>
+	
+	<select id="selectCategoryList" parameterType="categoryVO" resultMap="category">
+		SELECT
+			C.ca_idx
+		,	C.ca_id
+		,	C.ca_name
+		,	C.ca_depth
+		,	C.ca_parent_id
+		,	C.ca_seq
+		,	C.ca_use
+		,	C.ca_point
+		,	C.ca_org_idx
+		,	O.or_name 
+		FROM
+			sianadb.market.category C
+		LEFT JOIN
+			sianadb.market.org O
+			ON C.ca_org_idx = o.or_idx
+		WHERE 1 = 1
+		AND O.or_name IS NOT NULL
+		<if test="caOrgIdx != '' and caOrgIdx != null">
+			AND C.ca_org_idx = #{caOrgIdx}
+		</if>
+	</select>
+	
+	<select id="selectCategory" parameterType="categoryVO" resultMap="category">
+		SELECT
+			C.ca_idx
+			, C.ca_id
+			, C.ca_name
+			, C.ca_depth
+			, C.ca_parent_id
+			, CASE 
+				WHEN C.ca_depth > 1 
+				THEN (
+					SELECT ca_name 
+					FROM sianadb.market.category 
+					WHERE ca_id = C.ca_parent_id 
+					limit 1
+				) 
+				ELSE NULL END 
+				AS ca_parent_name
+			, C.ca_seq
+			, C.ca_use
+			, C.ca_point
+			, C.ca_org_idx
+			, O.or_name
+		FROM
+			sianadb.market.category C
+		LEFT JOIN
+			sianadb.market.org O
+			ON C.ca_org_idx = O.or_idx
+		WHERE 1 = 1
+		AND C.ca_idx = #{caIdx}
+	</select>
+	
+	<select id="selectDuplCnt" parameterType="categoryVO" resultType="int">
+		SELECT 
+			COUNT(*)
+		FROM
+			sianadb.market.category C
+		WHERE 1 = 1
+		AND (ca_id = #{caId} OR ca_name = #{caName})
+	</select>
+	
+	<update id="updateCaSeq" parameterType="categoryVO">
+		UPDATE
+			sianadb.market.category
+		<choose>
+			<!-- 최상위 depth일 경우 -->
+			<when test="caDepth == 1">
+				<choose>
+					<!-- 카테고리 수정 시 이전 시퀀스가 변경된 시퀀스보다 클 경우 -->
+					<when test="beforeSeq == maxSeq and beforeSeq != 0">
+						SET
+							ca_seq = ca_seq + 1
+						WHERE 1 = 1
+						AND ca_seq <![CDATA[ <= ]]> #{maxSeq}
+						AND ca_seq <![CDATA[ > ]]> #{minSeq}
+					</when>
+					<!-- 카테고리 수정 시 이전 시퀀스가 변경된 시퀀스보다 작을 경우 -->
+					<when test="beforeSeq == minSeq and beforeSeq != 0">
+						SET
+							ca_seq = ca_seq - 1
+						WHERE 1 = 1
+						AND ca_seq <![CDATA[ <= ]]> #{maxSeq}
+						AND ca_seq <![CDATA[ > ]]> #{minSeq}
+					</when>
+					<!-- 카테고리 등록 시 -->
+					<otherwise>
+						SET
+							ca_seq = ca_seq + 1
+						WHERE 1 = 1
+						AND ca_seq <![CDATA[ >= ]]> #{caSeq}
+					</otherwise>
+				</choose>
+				AND ca_depth = 1
+			</when>
+			<!-- 최상위 depth가 아닐 경우 -->
+			<otherwise>
+				<choose>
+					<!-- 카테고리 수정 시 이전 시퀀스가 변경된 시퀀스보다 클 경우 -->
+					<when test="beforeSeq == maxSeq and beforeSeq != 0">
+						SET
+							ca_seq = ca_seq + 1
+						WHERE 1 = 1
+						AND ca_seq <![CDATA[ < ]]> #{maxSeq}
+						AND ca_seq <![CDATA[ >= ]]> #{minSeq}
+					</when>
+					<!-- 카테고리 수정 시 이전 시퀀스가 변경된 시퀀스보다 작을 경우 -->
+					<when test="beforeSeq == minSeq and beforeSeq != 0">
+						SET
+							ca_seq = ca_seq - 1
+						WHERE 1 = 1
+						AND ca_seq <![CDATA[ <= ]]> #{maxSeq}
+						AND ca_seq <![CDATA[ > ]]> #{minSeq}
+					</when>
+					<!-- 카테고리 등록 시 -->
+					<otherwise>
+						SET
+							ca_seq = ca_seq + 1
+						WHERE 1 = 1
+						AND ca_seq <![CDATA[ >= ]]> #{caSeq}
+					</otherwise>
+				</choose>
+				AND ca_parent_id = #{caParentId}
+			</otherwise>
+		</choose>
+	</update>
+	
+	<insert id="insertCategory" parameterType="categoryVO" useGeneratedKeys="true" keyProperty="caIdx">
+		INSERT INTO
+			sianadb.market.category(
+			ca_id
+		,	ca_name
+		,	ca_depth
+		,	ca_parent_id
+		,	ca_seq
+		,	ca_use
+		,	ca_point
+		,	ca_org_idx
+		,	ca_reg_date
+		,	ca_reg_id
+		,	ca_reg_ip
+		) VALUES (
+			#{caId}
+		,	#{caName}
+		,	#{caDepth}
+		,	#{caParentId}
+		,	#{caSeq}
+		,	#{caUse}
+		,	#{caPoint}
+		,	#{caOrgIdx}
+		,	CURRENT_TIMESTAMP
+		,	#{caRegId}
+		,	#{caRegIp}
+		)
+	</insert>
+	
+	<update id="updateCategory" parameterType="categoryVO">
+		UPDATE
+			sianadb.market.category
+		SET
+			ca_id = #{caId}
+		,	ca_name = #{caName}
+		,	ca_depth = #{caDepth}
+		,	ca_parent_id = #{caParentId}
+		,	ca_seq = #{caSeq}
+		,	ca_use = #{caUse}
+		,	ca_point = #{caPoint}
+		,	ca_org_idx = #{caOrgIdx}
+		,	ca_mod_date = CURRENT_TIMESTAMP
+		,	ca_mod_id = #{caModId}
+		,	ca_mod_ip = #{caModIp}
+		WHERE 1 = 1
+		AND ca_idx = #{caIdx}
+	</update>
+	
+</mapper>

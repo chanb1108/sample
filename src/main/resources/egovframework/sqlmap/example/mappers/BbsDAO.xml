@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="bbs.dao.BbsDAO">
+
+	<resultMap id="bbs" type="bbs.vo.BbsVO">
+		<result property="bbIdx" column="bb_idx"/>
+		<result property="bbTitle" column="bb_title"/>
+		<result property="orName" column="or_name"/>
+		<result property="bbRegDate" column="bb_reg_date"/>
+		<result property="bbHit" column="bb_hit"/>
+		<result property="bbOpen" column="bb_open"/>
+		<result property="bbNotice" column="bb_notice"/>
+		<result property="bbOrIdx" column="bb_or_idx"/>
+		<result property="bbContent" column="bb_content"/>
+	</resultMap>
+	
+	<resultMap id="org" type="bbs.vo.OrgVO">
+		<result property="orIdx" column="or_idx"/>
+		<result property="orId" column="or_id"/>
+		<result property="orName" column="or_name"/>
+		<result property="orLevel" column="or_level"/>
+		<result property="orContestStatus" column="or_contest_status"/>
+		<result property="orRndStatus" column="or_rnd_status"/>
+		<result property="orIpIntro" column="or_ip_intro"/>
+		<result property="orSeq" column="or_seq"/>
+		<result property="orGb" column="or_gb"/>
+		<result property="orSearchGroup" column="or_search_group"/>
+	</resultMap>
+	
+	<resultMap id="bbsFile" type="bbs.vo.BbsFileVO">
+		<result property="bfIdx" column="bf_idx"/>
+		<result property="bfBbsid" column="bf_bbsid"/>
+		<result property="bfBbIdx" column="bf_bb_idx"/>
+		<result property="bfSrc" column="bf_src"/>
+		<result property="bfOrgName" column="bf_org_name"/>
+		<result property="bfName" column="bf_name"/>
+		<result property="bfExt" column="bf_ext"/>
+		<result property="bfSize" column="bf_size"/>
+		<result property="bfSeq" column="bf_seq"/>
+		<result property="bfRegDate" column="bf_reg_date"/>
+		<result property="bfRegId" column="bf_reg_id"/>
+		<result property="bfRegIp" column="bf_reg_ip"/>
+		<result property="bfModDate" column="bf_mod_date"/>
+		<result property="bfModId" column="bf_mod_id"/>
+		<result property="bfModIp" column="bf_mod_ip"/>
+	</resultMap>
+	
+	<select id="selectBbsCount" parameterType="bbsVO" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			sianadb.market.bbs B
+		LEFT JOIN
+			sianadb.market.org O
+			ON B.bb_or_idx = O.or_idx
+		WHERE 1 = 1
+		AND O.or_name IS NOT NULL
+		<if test="bbOrIdx != '' and bbOrIdx != null">
+			AND bb_or_idx = #{bbOrIdx}
+		</if>
+		<choose>
+			<when test="schDate == 'bbRegDate' and strDate != '' and strDate != null">
+				AND bb_reg_date between #{strDate}::timestamp 
+				<choose>
+					<when test="endDate != '' and endDate != null">
+						AND #{endDate}::timestamp
+					</when>
+					<otherwise>
+						AND CURRENT_TIMESTAMP
+					</otherwise>
+				</choose>
+			</when>
+			<when test="schDate == 'bbModDate' and strDate != '' and strDate != null">
+				AND bb_mod_date between #{strDate}::timestamp
+				<choose>
+					<when test="endDate != '' and endDate != null">
+						AND #{endDate}::timestamp
+					</when>
+					<otherwise>
+						AND CURRENT_TIMESTAMP
+					</otherwise>
+				</choose>
+			</when>
+		</choose>
+		<if test="bbTitle != '' and bbTitle != null">
+			AND bb_title LIKE CONCAT('%', #{bbTitle}, '%')		
+		</if>
+	</select>
+
+	<select id="selectBbsList" parameterType="bbsVO" resultMap="bbs">
+		SELECT
+			B.bb_idx
+		,	B.bb_title
+		,	O.or_name
+		,	TO_CHAR(B.bb_reg_date, 'YYYY-MM-DD HH24:MI:SS') as bb_reg_date
+		,	B.bb_hit
+		,	B.bb_open
+		FROM 
+			sianadb.market.bbs B
+		LEFT JOIN 
+			sianadb.market.org O
+			ON B.bb_or_idx = O.or_idx
+		WHERE 1 = 1 
+		AND O.or_name IS NOT NULL
+		<if test="bbOrIdx != '' and bbOrIdx != null">
+			AND bb_or_idx = #{bbOrIdx}
+		</if>
+		<choose>
+			<when test="schDate == 'bbRegDate' and strDate != '' and strDate != null">
+				AND bb_reg_date between #{strDate}::timestamp 
+				<choose>
+					<when test="endDate != '' and endDate != null">
+						AND #{endDate}::timestamp
+					</when>
+					<otherwise>
+						AND CURRENT_TIMESTAMP
+					</otherwise>
+				</choose>
+			</when>
+			<when test="schDate == 'bbModDate' and strDate != '' and strDate != null">
+				AND bb_mod_date between #{strDate}::timestamp
+				<choose>
+					<when test="endDate != '' and endDate != null">
+						AND #{endDate}::timestamp
+					</when>
+					<otherwise>
+						AND CURRENT_TIMESTAMP
+					</otherwise>
+				</choose>
+			</when>
+		</choose>
+		<if test="bbTitle != '' and bbTitle != null">
+			AND bb_title LIKE CONCAT('%', #{bbTitle}, '%')		
+		</if>
+		LIMIT #{pageSize} OFFSET #{pageNo}
+	</select>
+	
+	<select id="selectBbs" parameterType="int" resultMap="bbs">
+		SELECT
+			B.bb_idx
+		,	B.bb_notice
+		,	B.bb_or_idx
+		,	B.bb_title
+		,	B.bb_content
+		,	B.bb_open
+		,	TO_CHAR(B.bb_reg_date, 'YYYY-MM-DD HH24:MI:SS') as bb_reg_date
+		,	O.or_name
+		,	B.bb_hit
+		FROM 
+			sianadb.market.bbs B
+		LEFT JOIN
+			sianadb.market.org O
+			ON B.bb_or_idx = O.or_idx
+		WHERE 1 = 1 
+		AND B.bb_idx = #{bbIdx}
+	</select>
+	
+	<insert id="insertBbs" parameterType="bbsVO" useGeneratedKeys="true" keyProperty="bbIdx">
+		INSERT INTO 
+			sianadb.market.bbs(
+			bb_bbsid
+		,	bb_or_idx
+		,	bb_type
+		,	bb_title
+		,	bb_content
+		,	bb_seq
+		,	bb_hit
+		,	bb_notice
+		,	bb_open
+		,	bb_confirm
+		,	bb_status
+		,	bb_open_type
+		,	bb_co_idx
+		,	bb_reg_date
+		,	bb_reg_id
+		,	bb_reg_ip
+		) VALUES (
+			#{bbBbsid}
+		,	#{bbOrIdx}
+		,	#{bbType}
+		,	#{bbTitle}
+		,	#{bbContent}
+		,	#{bbSeq}
+		,	#{bbHit}
+		,	#{bbNotice}
+		,	#{bbOpen}
+		,	#{bbConfirm}
+		,	#{bbStatus}
+		,	#{bbOpenType}
+		,	#{bbCoIdx}
+		,	CURRENT_TIMESTAMP
+		,	#{bbRegId}
+		,	#{bbRegIp}
+		)
+	</insert>
+	
+	<update id="updateBbHit" parameterType="int">
+		UPDATE
+			sianadb.market.bbs
+		SET
+			bb_hit = bb_hit + 1
+		WHERE 1 = 1
+		AND bb_idx = #{bbIdx}
+	</update>
+	
+	<update id="updateBbs" parameterType="bbsVO">
+		UPDATE 
+			sianadb.market.bbs
+		SET
+			bb_mod_date = CURRENT_TIMESTAMP
+		,	bb_mod_id = #{bbModId}
+		,	bb_mod_ip = #{bbModIp}
+		,	bb_content = #{bbContent}
+		,	bb_notice = #{bbNotice}
+		,	bb_or_idx = #{bbOrIdx}
+		,	bb_title = #{bbTitle}
+		,	bb_open = #{bbOpen}
+		WHERE 1 = 1
+		AND bb_idx = #{bbIdx}
+	</update>
+
+</mapper>

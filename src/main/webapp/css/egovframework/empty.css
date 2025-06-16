@@ -1,0 +1,30 @@
+@charset "UTF-8";
+
+* {
+	margin : 0;
+	padding : 0;
+}
+.wrap {
+	width : 100%;
+}
+.header, .content, .footer {
+	width : 100%;
+	float : left;
+}
+.header, .footer {
+	height : 8em;
+}
+.header {
+	background-color : #3c9;
+}
+.header > div > .loginData {
+	margin-left : 90%;
+	margin-top : 35px;
+}
+.footer {
+	background-color : #c8a;
+}
+.content {
+	height : 500px;
+	background-color : #a9a;
+}

@@ -5,6 +5,7 @@
 *.jar
 *.war
 *.ear
+target/
 
 # 빌드 디렉터리
 /build/

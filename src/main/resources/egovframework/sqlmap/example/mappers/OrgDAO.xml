@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="bbs.dao.OrgDAO">
+
+	<resultMap id="org" type="bbs.vo.OrgVO">
+		<result property="orIdx" column="or_idx"/>
+		<result property="orId" column="or_id"/>
+		<result property="orName" column="or_name"/>
+		<result property="orLevel" column="or_level"/>
+		<result property="orContestStatus" column="or_contest_status"/>
+		<result property="orRndStatus" column="or_rnd_status"/>
+		<result property="orIpIntro" column="or_ip_intro"/>
+		<result property="orSeq" column="or_seq"/>
+		<result property="orGb" column="or_gb"/>
+		<result property="orSearchGroup" column="or_search_group"/>
+	</resultMap>
+
+	<select id="selectOrgList" parameterType="orgVO" resultMap="org">
+		SELECT 
+			O.or_idx
+		,	O.or_id
+		,	O.or_name
+		,	O.or_level
+		,	O.or_contest_status
+		,	O.or_rnd_status
+		,	O.or_rnd_status
+		,	O.or_ip_intro
+		,	O.or_seq
+		,	O.or_gb
+		,	O.or_search_group
+		FROM
+			sianadb.market.org O
+		ORDER BY
+			or_seq
+	</select>
+	
+</mapper>

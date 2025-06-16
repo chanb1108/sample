@@ -10,7 +10,10 @@
         <Logger name="java.sql" level="INFO" additivity="false">
             <AppenderRef ref="console" />
         </Logger>
-        <Logger name="egovframework" level="DEBUG" additivity="false">
+        <Logger name="bbs" level="DEBUG" additivity="false">
+            <AppenderRef ref="console" />
+        </Logger>
+        <Logger name="category" level="DEBUG" additivity="false">
             <AppenderRef ref="console" />
         </Logger>
         <Logger name="org.egovframe" level="INFO" additivity="false">

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="bbs.dao.BbsFileDAO">
+
+	<resultMap id="bbsFile" type="bbs.vo.BbsFileVO">
+		<result property="bfIdx" column="bf_idx"/>
+		<result property="bfBbsid" column="bf_bbsid"/>
+		<result property="bfBbIdx" column="bf_bb_idx"/>
+		<result property="bfSrc" column="bf_src"/>
+		<result property="bfOrgName" column="bf_org_name"/>
+		<result property="bfName" column="bf_name"/>
+		<result property="bfExt" column="bf_ext"/>
+		<result property="bfSize" column="bf_size"/>
+		<result property="bfSeq" column="bf_seq"/>
+		<result property="bfRegDate" column="bf_reg_date"/>
+		<result property="bfRegId" column="bf_reg_id"/>
+		<result property="bfRegIp" column="bf_reg_ip"/>
+		<result property="bfModDate" column="bf_mod_date"/>
+		<result property="bfModId" column="bf_mod_id"/>
+		<result property="bfModIp" column="bf_mod_ip"/>
+	</resultMap>
+
+	<insert id="insertBbsFileList" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="bfIdx">
+		INSERT INTO 
+			SIANADB.MARKET.BBS_FILE (
+			bf_bbsid
+		,	bf_bb_idx
+		,	bf_src
+		,	bf_org_name
+		,	bf_name
+		,	bf_ext
+		,	bf_size
+		,	bf_seq
+		,	bf_reg_date
+		,	bf_reg_id
+		,	bf_reg_ip
+		) VALUES
+		<foreach collection="list" item="bbsFile" separator=",">
+		(
+			#{bbsFile.bfBbsid}
+		,	#{bbsFile.bfBbIdx}
+		,	#{bbsFile.bfSrc}
+		,	#{bbsFile.bfOrgName}
+		,	#{bbsFile.bfName}
+		,	#{bbsFile.bfExt}
+		,	#{bbsFile.bfSize}
+		,	#{bbsFile.bfSeq}
+		,	CURRENT_TIMESTAMP()
+		,	#{bbsFile.bfRegId}
+		,	#{bbsFile.bfRegIp}
+		)
+		</foreach>
+	</insert>
+	
+    <select id="selectBbsFile" parameterType="int" resultMap="bbsFile">
+        SELECT *
+        FROM 
+        	sianadb.market.bbs_file BF
+        WHERE 1 = 1
+        AND BF.bf_bb_idx = #{bbIdx}
+    </select>
+
+</mapper>
