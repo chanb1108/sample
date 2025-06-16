@@ -90,6 +90,7 @@
 	<select id="selectBbsList" parameterType="bbsVO" resultMap="bbs">
 		SELECT
 			B.bb_idx
+		,	B.bb_bbsid
 		,	B.bb_title
 		,	O.or_name
 		,	TO_CHAR(B.bb_reg_date, 'YYYY-MM-DD HH24:MI:SS') as bb_reg_date
@@ -132,6 +133,7 @@
 		<if test="bbTitle != '' and bbTitle != null">
 			AND bb_title LIKE CONCAT('%', #{bbTitle}, '%')		
 		</if>
+		ORDER BY bb_reg_date DESC
 		LIMIT #{pageSize} OFFSET #{pageNo}
 	</select>
 	

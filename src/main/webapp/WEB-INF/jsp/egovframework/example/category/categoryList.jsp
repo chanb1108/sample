@@ -196,12 +196,25 @@ let list = {
 			, height: '400px'
 			, toolBar: ['excel']
 			, columns: [
-				{field: 'caId', type: 'tree', caption: '카테고리', width: 200}
+				{field: 'caId', type: 'tree', caption: '카테고리', width: 150}
 				, {field: 'caParentId', caption: '상위 카테고리', width: 150}
 				, {field: 'caSeq', caption: '시퀀스', width: 50}
-				, {field: 'caIdx', caption: '일련번호', width: 50}
+				, {field: 'caIdx', caption: '일련번호', width: 80}
 				, {field: 'caName', caption: '카테고리명', width: 200}
-				, {field: 'caUse', caption: '사용여부', width: 100}
+				, {
+					field: 'caUse'
+					, caption: '사용여부'
+					, width: 100
+					, getValue : (value, field, rowItem) => {
+						if (value == 'Y') {
+							value = '공개';
+							return value;
+						} else {
+							value = '미공개';
+							return value;
+						}
+					}
+				}
 				, {field: 'caPoint', caption: '포인트', width: 50}
 				, {field: 'orName', caption: '업체명', width: 150}
 				, {

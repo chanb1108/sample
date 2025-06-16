@@ -41,10 +41,10 @@ public class BbsVO {
 	private String bbTargetIdx;
 	private String bbId;
 	private String bbName;
-	private Timestamp bbRegDate;
+	private String bbRegDate;
 	private String bbRegId;
 	private String bbRegIp;
-	private Timestamp bbModDate;
+	private String bbModDate;
 	private String bbModId;
 	private String bbModIp;
 	
@@ -255,10 +255,10 @@ public class BbsVO {
 	public void setBbName(String bbName) {
 		this.bbName = bbName;
 	}
-	public Timestamp getBbRegDate() {
+	public String getBbRegDate() {
 		return bbRegDate;
 	}
-	public void setBbRegDate(Timestamp bbRegDate) {
+	public void setBbRegDate(String bbRegDate) {
 		this.bbRegDate = bbRegDate;
 	}
 	public String getBbRegId() {
@@ -273,10 +273,10 @@ public class BbsVO {
 	public void setBbRegIp(String bbRegIp) {
 		this.bbRegIp = bbRegIp;
 	}
-	public Timestamp getBbModDate() {
+	public String getBbModDate() {
 		return bbModDate;
 	}
-	public void setBbModDate(Timestamp bbModDate) {
+	public void setBbModDate(String bbModDate) {
 		this.bbModDate = bbModDate;
 	}
 	public String getBbModId() {

@@ -49,7 +49,6 @@
  		</div>
  	</div>
  </div>
-  <div id="dataCnt" style="text-align : left;"></div>
   <div id="grid"></div>
   <button onclick='SBGrid3.reload(datagrid)' style="border:1px solid #000; padding : 2px; margin-left : -75%;">reload</button>
 <script type="text/javaScript" language="javascript">
@@ -72,6 +71,7 @@ let list = {
     // 초기함수
     init : function(){
     	list.getGrid();
+    	list.chgCol();
     }
     
 	, formReset : function(){
@@ -89,9 +89,7 @@ let list = {
 			, data : data
 			, dataType : 'text'
 			, success : function (data, status, xhr) {
-				console.log(data);
 				let dataCnt = data.replaceAll('"', '');
-				$('#dataCnt').text('총 '+ dataCnt+'개');
 				list.totCnt = dataCnt;
 			}
 			, error: function (data, status, error) {
@@ -137,6 +135,7 @@ let list = {
     			, method : 'GET'
     			, data : gridData
     			, success : function (result) {
+    				console.log(result);
     				resolve({data : result, total : list.totCnt});
     			}
     		})
@@ -156,13 +155,24 @@ let list = {
 				}
 				, pageSize : 10
 				, serverPaging : true
+				, orders : [{field : 'bbRegDate', dir : 'desc'}]
 			}
 			, container: '#grid'
 			, width: '100%'
 			, height: '400px'
 			, pagerBar: {
-				center : 'pager'
-				, right: 'pageSizes' 
+				left : [
+					(container) => {
+						let message = '<span>전체 :'+list.totCnt+' 개 |</span>';
+						$(container).append(message);
+					}
+					, 'pageSizes'
+					, (container) => {
+						let message = '개 씩 보기';
+						$(container).append(message);
+					}
+				]
+				, center : 'pager'
 			}
 			, scrollRange : 'page'
 			,pageable: { 
@@ -172,13 +182,49 @@ let list = {
 		       , pageSizes :  [10,20,30] 
 		    }
 			, toolBar: ['excel']
+			, reverseRowNo : true
 			, columns: [
-				{field: 'bbIdx', caption: '일렬번호', width: 100}
-				,{field: 'bbTitle', caption: '제목', width: 300}
-				, {field: 'orName', caption: '업체명', width: 250}
-				, {field: 'bbRegDate', caption: '등록일시', width: 100}
+				{field: 'bbIdx', caption: '번호', width: 80, visible : false}
+				, {
+					field : 'bbBbsid'
+					, caption:'게시 유형'
+					, width: 100
+					, getValue : (value, field, rowItem) => {
+						switch (value) {
+							case 'support' : return '지원';
+							case 'news' : return 'NEWS';
+							case 'faq' : return 'FAQ';
+							case 'manual' : return '메뉴얼';
+							case 'merge' : return '합병';
+							case 'consult' : return '상담';
+							case 'notice' : return '일반';
+							case 'inno' : return '혁신';
+							case 'prefer' : return '선호';
+							case 'soc' : return 'SOC';
+							case 'perform' : return '수행';
+							case 'policy' : return '정책';
+							default : return '기타';
+						}
+					}
+				}
+				,{field: 'bbTitle', caption: '제목', width: 200}
+				, {field: 'orName', caption: '업체명', width: 200}
+				, {field: 'bbRegDate', caption: '등록일시', width: 200}
 				, {field: 'bbHit', caption: '조회수', width: 100}
-				, {field: 'bbOpen', caption: '공개여부', width: 100}
+				, {
+					field: 'bbOpen'
+					, caption: '공개여부'
+					, width: 100
+					, getValue : (value, field, rowItem) => {
+						if(value == '1') {
+							value = '공개';
+							return value;
+						} else {
+							value = '미공개';
+							return value;
+						}
+					}
+				}
 			]
 			, excelExport: {
 		       fileName: 'bbs_data.xlsx'
@@ -200,6 +246,11 @@ let list = {
 		}
 		datagrid = SBGrid3.createGrid(gridConfig);
 		datagrid.refresh();
+	}
+	
+	, chgCol : function () {
+		const column = SBGrid3.getColumn(datagrid, 0)[0];
+		SBGrid3.setCaption(datagrid, column, '순번');
 	}
 }
 </script>
